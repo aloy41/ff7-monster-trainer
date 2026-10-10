@@ -1,0 +1,54 @@
+# VERIFY run 5: reproduce the battle hang seen in run 4. Continue Save 1 / GAME 01 (Scrutin Eye lead, first move
+# Fire). Battle 300, no Catch, no F8: just command the monster (OK, OK) until the battle ends.
+log VERIFY hang_repro
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+shot t-files
+press ok
+wait 2000
+press up
+wait 400
+shot t-slots
+press ok
+waitmode 1 30000
+wait 3000
+dump DC08B4 4
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 6000
+shot h-menu
+whilemode 2 90000
+press ok
+wait 400
+shot h-target-#
+press ok
+wait 1000
+shot h-#
+wait 1000
+shot h-#
+wait 1000
+shot h-#
+wait 1000
+shot h-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot h-end
+quit

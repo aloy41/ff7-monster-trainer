@@ -1,0 +1,76 @@
+# Regression after the code review: inn opcode heals (fieldop 3E = MHMMX), companions stashed at battle-party build
+# (game thread) and restored with guards, send-out + win, then a save to file 3 slot 1 keyed by content.
+log regression_core
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 96
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 2500
+log --- inn: MHMMX restores the party (roster 96 has Mono Drive at 10 HP)
+fieldop 3E
+wait 1500
+log --- Barret joins the field party
+write8 DC0231 1
+dump DC0230 4
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 1000
+dump DC0230 4
+wait 4000
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 3500
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+log --- back in the field: Barret restored?
+dump DC0230 4
+write32 DC08B4 3333
+fieldop 49 00 0E 00
+wait 2500
+press right
+wait 300
+press right
+wait 300
+shot save-file3
+press ok
+wait 1500
+press up
+wait 300
+press up
+wait 300
+press ok
+wait 1500
+press ok
+wait 2500
+press ok
+wait 1500
+press cancel
+wait 1500
+press cancel
+wait 2000
+quit

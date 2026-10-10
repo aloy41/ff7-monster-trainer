@@ -1,0 +1,61 @@
+# D6 regression: the game reloads kernel2 on the way back to the title, which restored 'Steal'. After Game Over ->
+# New Game, Cloud's command must read Catch again (log: a second TEXT kernel2 'Steal' -> 'Catch'; shot of the menu).
+log catch_after_gameover
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press ok
+wait 2000
+press ok
+waitmode 1 30000
+wait 3000
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 2000
+write32 9AB108 1
+hud f8
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+log ===== NEW GAME after a played save
+press up
+wait 600
+press ok
+waitmode 1 30000
+wait 4000
+hud f6
+wait 700
+shot n-roster
+hud f6
+
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 5000
+hud f8
+wait 2500
+shot n-battle-menu
+quit

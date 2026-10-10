@@ -1,0 +1,356 @@
+# VERIFY4 E3: Catch delay. Battle 300: Catch an MP with dense shots (the Gotcha message). Battle 27 (6 Adamantaimai, no room,
+# long enemy animations): repeated Catch; does a Catch whose action runs > 10 s after the command still roll?
+log VERIFY4 E3 catch_delay
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 2500
+log ===== 300 Catch MP
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 3000
+write32 9AB108 9999
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+press ok
+wait 1000
+shot mp1-msg-#
+wait 700
+shot mp1-msg-#
+wait 700
+shot mp1-msg-#
+wait 700
+shot mp1-msg-#
+wait 700
+shot mp1-msg-#
+wait 700
+shot mp1-msg-#
+wait 700
+shot mp1-msg-#
+wait 700
+shot mp1-msg-#
+wait 700
+shot mp1-msg-#
+wait 700
+shot mp1-msg-#
+wait 700
+write32 9AB108 9999
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+press ok
+wait 1000
+shot mp2-msg-#
+wait 700
+shot mp2-msg-#
+wait 700
+shot mp2-msg-#
+wait 700
+shot mp2-msg-#
+wait 700
+shot mp2-msg-#
+wait 700
+shot mp2-msg-#
+wait 700
+shot mp2-msg-#
+wait 700
+shot mp2-msg-#
+wait 700
+shot mp2-msg-#
+wait 700
+shot mp2-msg-#
+wait 700
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 100000
+press ok
+wait 400
+press ok
+wait 2000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot mp-roster
+hud f6
+log ===== 27 six Adamantaimai
+fieldop 70 00 1B 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 3000
+write32 9AB108 9999
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+press ok
+wait 1000
+shot ad1-msg-#
+wait 700
+shot ad1-msg-#
+wait 700
+shot ad1-msg-#
+wait 700
+shot ad1-msg-#
+wait 700
+shot ad1-msg-#
+wait 700
+shot ad1-msg-#
+wait 700
+shot ad1-msg-#
+wait 700
+shot ad1-msg-#
+wait 700
+shot ad1-msg-#
+wait 700
+shot ad1-msg-#
+wait 700
+write32 9AB108 9999
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+press ok
+wait 1000
+shot ad2-msg-#
+wait 700
+shot ad2-msg-#
+wait 700
+shot ad2-msg-#
+wait 700
+shot ad2-msg-#
+wait 700
+shot ad2-msg-#
+wait 700
+shot ad2-msg-#
+wait 700
+shot ad2-msg-#
+wait 700
+shot ad2-msg-#
+wait 700
+shot ad2-msg-#
+wait 700
+shot ad2-msg-#
+wait 700
+write32 9AB108 9999
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+press ok
+wait 1000
+shot ad3-msg-#
+wait 700
+shot ad3-msg-#
+wait 700
+shot ad3-msg-#
+wait 700
+shot ad3-msg-#
+wait 700
+shot ad3-msg-#
+wait 700
+shot ad3-msg-#
+wait 700
+shot ad3-msg-#
+wait 700
+shot ad3-msg-#
+wait 700
+shot ad3-msg-#
+wait 700
+shot ad3-msg-#
+wait 700
+write32 9AB108 9999
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+press ok
+wait 1000
+shot ad4-msg-#
+wait 700
+shot ad4-msg-#
+wait 700
+shot ad4-msg-#
+wait 700
+shot ad4-msg-#
+wait 700
+shot ad4-msg-#
+wait 700
+shot ad4-msg-#
+wait 700
+shot ad4-msg-#
+wait 700
+shot ad4-msg-#
+wait 700
+shot ad4-msg-#
+wait 700
+shot ad4-msg-#
+wait 700
+write32 9AB108 9999
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+press ok
+wait 1000
+shot ad5-msg-#
+wait 700
+shot ad5-msg-#
+wait 700
+shot ad5-msg-#
+wait 700
+shot ad5-msg-#
+wait 700
+shot ad5-msg-#
+wait 700
+shot ad5-msg-#
+wait 700
+shot ad5-msg-#
+wait 700
+shot ad5-msg-#
+wait 700
+shot ad5-msg-#
+wait 700
+shot ad5-msg-#
+wait 700
+write32 9AB108 9999
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+press ok
+wait 1000
+shot ad6-msg-#
+wait 700
+shot ad6-msg-#
+wait 700
+shot ad6-msg-#
+wait 700
+shot ad6-msg-#
+wait 700
+shot ad6-msg-#
+wait 700
+shot ad6-msg-#
+wait 700
+shot ad6-msg-#
+wait 700
+shot ad6-msg-#
+wait 700
+shot ad6-msg-#
+wait 700
+shot ad6-msg-#
+wait 700
+write32 9AB108 9999
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+press ok
+wait 1000
+shot ad7-msg-#
+wait 700
+shot ad7-msg-#
+wait 700
+shot ad7-msg-#
+wait 700
+shot ad7-msg-#
+wait 700
+shot ad7-msg-#
+wait 700
+shot ad7-msg-#
+wait 700
+shot ad7-msg-#
+wait 700
+shot ad7-msg-#
+wait 700
+shot ad7-msg-#
+wait 700
+shot ad7-msg-#
+wait 700
+write32 9AB108 9999
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+press ok
+wait 1000
+shot ad8-msg-#
+wait 700
+shot ad8-msg-#
+wait 700
+shot ad8-msg-#
+wait 700
+shot ad8-msg-#
+wait 700
+shot ad8-msg-#
+wait 700
+shot ad8-msg-#
+wait 700
+shot ad8-msg-#
+wait 700
+shot ad8-msg-#
+wait 700
+shot ad8-msg-#
+wait 700
+shot ad8-msg-#
+wait 700
+quit

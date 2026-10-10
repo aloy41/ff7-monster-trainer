@@ -1,0 +1,126 @@
+{
+ "version": 1,
+ "slot": 61,
+ "roster": {
+  "next_uid": 7,
+  "party": [
+   {
+    "uid": 1,
+    "species": 53,
+    "nickname": "Hammer Blaster",
+    "level": 12,
+    "xp": 160000,
+    "hp": 400,
+    "mp": 999,
+    "known": [
+     362,
+     363
+    ],
+    "equipped": [
+     362,
+     363
+    ],
+    "caught_level": 12,
+    "caught_scene": 0
+   },
+   {
+    "uid": 2,
+    "species": 18,
+    "nickname": "Mono Drive",
+    "level": 14,
+    "xp": 5799,
+    "hp": 300,
+    "mp": 999,
+    "known": [
+     276
+    ],
+    "equipped": [
+     276
+    ],
+    "caught_level": 14,
+    "caught_scene": 0
+   },
+   {
+    "uid": 3,
+    "species": 17,
+    "nickname": "Guard Hound",
+    "level": 7,
+    "xp": 775,
+    "hp": 200,
+    "mp": 999,
+    "known": [
+     274,
+     275
+    ],
+    "equipped": [
+     274,
+     275
+    ],
+    "caught_level": 7,
+    "caught_scene": 0
+   },
+   {
+    "uid": 4,
+    "species": 21,
+    "nickname": "Sweeper",
+    "level": 14,
+    "xp": 5799,
+    "hp": 300,
+    "mp": 999,
+    "known": [
+     272,
+     280,
+     281
+    ],
+    "equipped": [
+     272,
+     280,
+     281
+    ],
+    "caught_level": 14,
+    "caught_scene": 0
+   },
+   {
+    "uid": 5,
+    "species": 34,
+    "nickname": "Vice",
+    "level": 11,
+    "xp": 2839,
+    "hp": 300,
+    "mp": 999,
+    "known": [
+     308
+    ],
+    "equipped": [
+     308
+    ],
+    "caught_level": 11,
+    "caught_scene": 0
+   },
+   {
+    "uid": 6,
+    "species": 35,
+    "nickname": "Corneo's Lackey",
+    "level": 10,
+    "xp": 2149,
+    "hp": 300,
+    "mp": 999,
+    "known": [
+     308
+    ],
+    "equipped": [
+     308
+    ],
+    "caught_level": 10,
+    "caught_scene": 0
+   }
+  ],
+  "box": [],
+  "trainer": {
+   "captures": 6,
+   "battles": 0,
+   "legendary_unlocked": false,
+   "kit_given": true
+  }
+ }
+}

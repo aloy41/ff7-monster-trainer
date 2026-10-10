@@ -1,0 +1,17 @@
+[package]
+name = "trainer_core"
+version = "0.1.0"
+edition = "2024"
+description = "FF7 Monster Trainer rules: species, capture, XP, learnsets, evolution, party/box, sidecar saves. No game access."
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+panic = "abort"
+lto = true

@@ -1,0 +1,71 @@
+# VERIFY run 11: is the post-Game-Over "battle 0" from run 10 caused by the fieldop test helper? New Game, walk
+# into the story battle (no fieldop anywhere), Cloud at 1 HP, no input -> Game Over -> Continue Save 1 / GAME 02.
+log VERIFY gameover_natural
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 2000
+write32 9AB108 1
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+shot go-over-#
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+shot r-title
+log ===== Continue Save 1 / GAME 02 after a natural Game Over
+shot r-title2
+press ok
+wait 4000
+shot r-files-0
+press left
+wait 500
+press left
+wait 500
+press left
+wait 500
+press left
+wait 500
+shot r-files-1
+press ok
+wait 3000
+shot r-slots-0
+press ok
+waitmode 1 30000
+wait 8000
+shot r-field
+dump DC08B4 4
+quit

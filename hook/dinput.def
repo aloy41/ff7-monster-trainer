@@ -1,0 +1,3 @@
+LIBRARY DINPUT
+EXPORTS
+    DirectInputCreateA = _Proxy_DirectInputCreateA@16

@@ -1,0 +1,162 @@
+# Battle matrix via fieldop BATTLE (70 00 lo hi). Roster: Mono Drive L14 (slot 97).
+#  324 Guard Scorpion (boss)   -> sent out (injected), F8 trainer turn, Catch -> "can't be caught!"
+#  500 Bomb                    -> sent out (injected), F8, Catch attempts on a wild Bomb
+#   48 Levrikon/Mu/+1 (all 3 types placed) -> no enemy-type slot: Cloud fights alone
+#   27 Adamantaimai x6 (all placements used)            -> no room: Cloud fights alone
+# Test-only: Cloud's battle HP is set to 9999 (out-of-story battles can one-shot a L6 Cloud).
+# Wild HP is poked to 1 (actor i HP = 0x9AB0DC + i*0x68 + 0x2C) so each fight ends in a turn or two.
+log battle_matrix
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 97
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 2500
+
+log ===== 324 Guard Scorpion (boss)
+fieldop 70 00 44 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 6000
+shot boss-#
+hud f8
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 400
+press ok
+wait 2600
+shot boss-#
+wait 2000
+hud f8
+write32 9AB2A8 1
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 3000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+
+log ===== 500 Bomb
+fieldop 70 00 F4 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 6000
+shot bomb-#
+hud f8
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 400
+press ok
+wait 2600
+shot bomb-#
+wait 3500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 400
+press ok
+wait 2600
+shot bomb-#
+wait 3000
+hud f8
+write32 9AB2A8 1
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 3000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+
+log ===== 48 three types placed
+fieldop 70 00 30 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 4000
+shot three-#
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 3000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+
+log ===== 27 six placed
+fieldop 70 00 1B 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 4000
+shot six-#
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+write32 9AB448 1
+write32 9AB4B0 1
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 3000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+shot end-field
+quit

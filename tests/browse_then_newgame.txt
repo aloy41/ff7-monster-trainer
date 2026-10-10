@@ -1,0 +1,26 @@
+# N3 follow-up: Continue -> open a save file (slots listed) -> back out -> NEW GAME must still be a New Game
+# (does browsing call load_save_file?). Then quit.
+log browse_then_newgame
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press ok
+wait 2000
+shot b-slots
+press cancel
+wait 1500
+press cancel
+wait 1500
+press cancel
+wait 2000
+shot b-title
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 3000
+quit

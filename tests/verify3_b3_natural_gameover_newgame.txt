@@ -1,0 +1,130 @@
+# VERIFY3 run B3: no fieldop at all. New Game + core load 80 (roster in memory), natural platform battle, Cloud 1 HP,
+# F8, no input -> natural Game Over -> title -> NEW GAME: roster empty + kit; Cloud's command must read "Catch" in
+# the natural first battle after a Game Over; materia menu; Catch the MPs.
+log VERIFY3 B3 natural_gameover_newgame
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 80
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 2000
+write32 9AB108 1
+hud f8
+wait 3000
+shot g1-cloudmenu
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+log ===== NEW GAME after a natural Game Over
+press up
+wait 600
+shot n-title
+press ok
+waitmode 1 30000
+wait 4000
+hud f6
+wait 700
+shot n-roster
+hud f6
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press menu
+wait 2500
+shot m-menu
+press down
+wait 300
+press down
+wait 300
+press ok
+wait 2000
+shot m-materia-a
+press ok
+wait 2000
+shot m-materia-b
+press cancel
+wait 800
+press cancel
+wait 800
+whilemode 5 15000
+press cancel
+wait 1200
+end
+wait 1500
+shot m-field
+log ===== natural first battle after the Game Over
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 6000
+shot c-menu
+whilemode 2 150000
+press down
+wait 250
+press down
+wait 250
+shot c-cursor-#
+press ok
+wait 400
+press ok
+wait 1500
+shot c-msg-#
+wait 600
+shot c-msg-#
+wait 600
+shot c-msg-#
+wait 600
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+hud f6
+wait 800
+shot c-roster
+hud f6
+quit

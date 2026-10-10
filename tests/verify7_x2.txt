@@ -1,0 +1,445 @@
+log VERIFY7 verify7_x2
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 61
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+log ===== B0 battle 75 delay 50 value 0 f8 None enemy_poke None
+fieldop 70 00 4B 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+write32 9AB2AC 30000
+write32 9AB2A8 30000
+write32 9AB314 30000
+write32 9AB310 30000
+write32 9AB37C 30000
+write32 9AB378 30000
+write32 9AB3E4 30000
+write32 9AB3E0 30000
+write32 9AB44C 30000
+write32 9AB448 30000
+write32 9AB4B4 9999
+write32 9AB4B0 9999
+wait 6500
+dump 9A8B14 2
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 50
+write32 9AB4B0 0
+log D12 B0 monster HP 0 (delay 50)
+dump 9A8B14 2
+wait 1500
+dump 9A8B14 2
+shot B0-a
+wait 7500
+dump 9A8B14 2
+shot B0-b
+log --- B0: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+write32 9AB448 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot B0-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- B0: battle over
+quitifnotmode 1
+log ===== B1 battle 75 delay 250 value 0 f8 None enemy_poke None
+fieldop 70 00 4B 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+write32 9AB2AC 30000
+write32 9AB2A8 30000
+write32 9AB314 30000
+write32 9AB310 30000
+write32 9AB37C 30000
+write32 9AB378 30000
+write32 9AB3E4 30000
+write32 9AB3E0 30000
+write32 9AB44C 30000
+write32 9AB448 30000
+write32 9AB4B4 9999
+write32 9AB4B0 9999
+wait 6500
+dump 9A8B14 2
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 250
+write32 9AB4B0 0
+log D12 B1 monster HP 0 (delay 250)
+dump 9A8B14 2
+wait 1500
+dump 9A8B14 2
+shot B1-a
+wait 7500
+dump 9A8B14 2
+shot B1-b
+log --- B1: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+write32 9AB448 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot B1-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- B1: battle over
+quitifnotmode 1
+log ===== B2 battle 75 delay 650 value 0 f8 None enemy_poke None
+fieldop 70 00 4B 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+write32 9AB2AC 30000
+write32 9AB2A8 30000
+write32 9AB314 30000
+write32 9AB310 30000
+write32 9AB37C 30000
+write32 9AB378 30000
+write32 9AB3E4 30000
+write32 9AB3E0 30000
+write32 9AB44C 30000
+write32 9AB448 30000
+write32 9AB4B4 9999
+write32 9AB4B0 9999
+wait 6500
+dump 9A8B14 2
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 650
+write32 9AB4B0 0
+log D12 B2 monster HP 0 (delay 650)
+dump 9A8B14 2
+wait 1500
+dump 9A8B14 2
+shot B2-a
+wait 7500
+dump 9A8B14 2
+shot B2-b
+log --- B2: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+write32 9AB448 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot B2-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- B2: battle over
+quitifnotmode 1
+log ===== B3 battle 75 delay 1000 value 0 f8 None enemy_poke None
+fieldop 70 00 4B 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+write32 9AB2AC 30000
+write32 9AB2A8 30000
+write32 9AB314 30000
+write32 9AB310 30000
+write32 9AB37C 30000
+write32 9AB378 30000
+write32 9AB3E4 30000
+write32 9AB3E0 30000
+write32 9AB44C 30000
+write32 9AB448 30000
+write32 9AB4B4 9999
+write32 9AB4B0 9999
+wait 6500
+dump 9A8B14 2
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 1000
+write32 9AB4B0 0
+log D12 B3 monster HP 0 (delay 1000)
+dump 9A8B14 2
+wait 1500
+dump 9A8B14 2
+shot B3-a
+wait 7500
+dump 9A8B14 2
+shot B3-b
+log --- B3: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+write32 9AB448 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot B3-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- B3: battle over
+quitifnotmode 1
+log ===== B4 battle 75 delay 1600 value 0 f8 None enemy_poke None
+fieldop 70 00 4B 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+write32 9AB2AC 30000
+write32 9AB2A8 30000
+write32 9AB314 30000
+write32 9AB310 30000
+write32 9AB37C 30000
+write32 9AB378 30000
+write32 9AB3E4 30000
+write32 9AB3E0 30000
+write32 9AB44C 30000
+write32 9AB448 30000
+write32 9AB4B4 9999
+write32 9AB4B0 9999
+wait 6500
+dump 9A8B14 2
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 1600
+write32 9AB4B0 0
+log D12 B4 monster HP 0 (delay 1600)
+dump 9A8B14 2
+wait 1500
+dump 9A8B14 2
+shot B4-a
+wait 7500
+dump 9A8B14 2
+shot B4-b
+log --- B4: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+write32 9AB448 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot B4-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- B4: battle over
+quitifnotmode 1
+log ===== B5 battle 75 delay 2200 value 0 f8 None enemy_poke None
+fieldop 70 00 4B 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+write32 9AB2AC 30000
+write32 9AB2A8 30000
+write32 9AB314 30000
+write32 9AB310 30000
+write32 9AB37C 30000
+write32 9AB378 30000
+write32 9AB3E4 30000
+write32 9AB3E0 30000
+write32 9AB44C 30000
+write32 9AB448 30000
+write32 9AB4B4 9999
+write32 9AB4B0 9999
+wait 6500
+dump 9A8B14 2
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 2200
+write32 9AB4B0 0
+log D12 B5 monster HP 0 (delay 2200)
+dump 9A8B14 2
+wait 1500
+dump 9A8B14 2
+shot B5-a
+wait 7500
+dump 9A8B14 2
+shot B5-b
+log --- B5: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+write32 9AB448 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot B5-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- B5: battle over
+quitifnotmode 1
+log --- PASS marker: script end reached
+quit

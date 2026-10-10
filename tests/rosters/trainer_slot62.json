@@ -1,0 +1,35 @@
+{
+ "version": 1,
+ "slot": 62,
+ "roster": {
+  "next_uid": 2,
+  "party": [
+   {
+    "uid": 1,
+    "species": 105,
+    "nickname": "Bomb",
+    "level": 30,
+    "xp": 53307,
+    "hp": 9999,
+    "mp": 999,
+    "known": [
+     294,
+     489
+    ],
+    "equipped": [
+     294,
+     489
+    ],
+    "caught_level": 30,
+    "caught_scene": 0
+   }
+  ],
+  "box": [],
+  "trainer": {
+   "captures": 1,
+   "battles": 0,
+   "legendary_unlocked": false,
+   "kit_given": true
+  }
+ }
+}

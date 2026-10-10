@@ -1,0 +1,83 @@
+# VERIFY2 run 6: is the battle that starts right after Continue (run 5) a fieldop artifact? New Game + roster 80,
+# natural platform battle (no fieldop), monster out, Cloud 1 HP, F8, no input -> Game Over -> Continue Save 1 /
+# GAME 03: must land in the field with the 2 MPs and no battle.
+log VERIFY2 natural_gameover_continue
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 80
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 2000
+write32 9AB108 1
+hud f8
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+log ===== Continue Save 1 / GAME 03 after a natural Game Over
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press ok
+wait 2000
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press down
+wait 300
+press down
+wait 400
+shot c-slots
+press ok
+waitmode 1 30000
+wait 8000
+log --- 8 s after Continue
+shot c-field
+hud f6
+wait 700
+shot c-roster
+hud f6
+quit

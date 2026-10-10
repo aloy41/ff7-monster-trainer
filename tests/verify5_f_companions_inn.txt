@@ -1,0 +1,114 @@
+log VERIFY5 F companions_inn
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 64
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+write8 DC0231 1
+write8 DC0232 2
+dump DC0230 4
+log ===== battle 300 with Barret+Tifa in the field party
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot cp-go
+wait 4500
+shot cp-menu
+dump DC0230 4
+whilemode 2 150000
+write32 9AB108 9999
+press ok
+wait 400
+press ok
+wait 2000
+shot cp-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- after battle: party must be 00 01 02
+dump DC0230 4
+shot cp-field
+log ===== second battle (natural walk) with companions
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 3000
+shot cn-go
+wait 3000
+shot cn-menu
+whilemode 2 150000
+write32 9AB108 9999
+press ok
+wait 400
+press ok
+wait 2000
+shot cn-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+dump DC0230 4
+log ===== monster damaged, inn heal (MHMMX)
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1500
+write32 9AB378 5
+wait 1500
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 150000
+write32 9AB108 9999
+press ok
+wait 400
+press ok
+wait 2000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot inn-before
+hud f6
+fieldop 3E
+wait 1500
+hud f6
+wait 700
+shot inn-after
+hud f6
+log --- PASS marker: script end reached
+quit

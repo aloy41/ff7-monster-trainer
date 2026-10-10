@@ -1,0 +1,255 @@
+log VERIFY5B J installer_smoke
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+hud f6
+wait 700
+shot j-roster0
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+write32 9AB108 9999
+wait 7000
+shot j1-menu
+press down
+wait 300
+press down
+wait 300
+shot j1-cursor
+press ok
+wait 600
+shot j1-target
+press ok
+wait 1000
+shot j1-msg-#
+wait 1000
+shot j1-msg-#
+wait 1000
+shot j1-msg-#
+wait 1000
+shot j1-msg-#
+wait 1000
+shot j1-msg-#
+wait 1000
+shot j1-msg-#
+wait 1000
+shot j1-msg-#
+wait 1000
+shot j1-msg-#
+wait 1000
+shot j1-msg-#
+wait 1000
+shot j1-msg-#
+wait 1000
+shot j1-msg-#
+wait 1000
+shot j1-msg-#
+wait 1000
+write32 9AB108 9999
+wait 12000
+write32 9AB108 9999
+wait 7000
+shot j2-menu
+press down
+wait 300
+press down
+wait 300
+shot j2-cursor
+press ok
+wait 600
+shot j2-target
+press ok
+wait 1000
+shot j2-msg-#
+wait 1000
+shot j2-msg-#
+wait 1000
+shot j2-msg-#
+wait 1000
+shot j2-msg-#
+wait 1000
+shot j2-msg-#
+wait 1000
+shot j2-msg-#
+wait 1000
+shot j2-msg-#
+wait 1000
+shot j2-msg-#
+wait 1000
+shot j2-msg-#
+wait 1000
+shot j2-msg-#
+wait 1000
+shot j2-msg-#
+wait 1000
+shot j2-msg-#
+wait 1000
+write32 9AB108 9999
+wait 12000
+write32 9AB108 9999
+wait 7000
+shot j3-menu
+press down
+wait 300
+press down
+wait 300
+shot j3-cursor
+press ok
+wait 600
+shot j3-target
+press ok
+wait 1000
+shot j3-msg-#
+wait 1000
+shot j3-msg-#
+wait 1000
+shot j3-msg-#
+wait 1000
+shot j3-msg-#
+wait 1000
+shot j3-msg-#
+wait 1000
+shot j3-msg-#
+wait 1000
+shot j3-msg-#
+wait 1000
+shot j3-msg-#
+wait 1000
+shot j3-msg-#
+wait 1000
+shot j3-msg-#
+wait 1000
+shot j3-msg-#
+wait 1000
+shot j3-msg-#
+wait 1000
+write32 9AB108 9999
+wait 12000
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot j-roster
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot j4-go
+wait 4500
+shot j4-menu
+press ok
+wait 500
+shot j4-moves
+press ok
+wait 500
+shot j4-target
+press ok
+wait 1000
+shot j4-act-#
+wait 1000
+shot j4-act-#
+wait 1000
+shot j4-act-#
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot j-after
+hud f6
+write32 DC08B4 777
+fieldop 49 00 0E 00
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+shot js-files
+press ok
+wait 1500
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+shot js-slots
+press ok
+wait 1500
+shot js-confirm
+press ok
+wait 2500
+shot js-done
+whilemode 5 30000
+press cancel
+wait 1500
+end
+waitmode 1 10000
+wait 1500
+hud f6
+wait 700
+shot js-roster
+hud f6
+log --- PASS marker: script end reached
+quit

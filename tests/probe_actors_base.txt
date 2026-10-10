@@ -1,0 +1,31 @@
+log probe_actors_base
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 99
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+core new
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 5000
+dump 9AB0DC 0x68
+dump 9AB27C 0x68
+dump 9AB2E4 0x68
+dump BE1178 0x60
+dump BF0C5C 0x60
+find RTAA
+quit

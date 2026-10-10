@@ -1,0 +1,61 @@
+# VERIFY run 3: Continue -> Save 1 / GAME 01 (save A: grown roster, Scrutin Eye lead, Barret in party).
+# Expect LOAD roster file 0 slot 0 party 6 box 1; battle 300 -> "Go, Scrutin Eye!"; Barret stays out, comes back.
+log VERIFY load_A
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+shot t-0-title
+shot t-1-title-cont
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+shot t-2-files
+press ok
+wait 2000
+shot t-3-slots
+press ok
+waitmode 1 30000
+wait 3000
+dump DC08B4 4
+dump DC0230 4
+hud f6
+wait 700
+shot l-field-roster
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+dump DC0230 4
+wait 900
+shot l-go-#
+wait 900
+shot l-go-#
+wait 4000
+shot l-menu
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 3000
+shot l-turn-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+dump DC0230 4
+hud f6
+wait 700
+shot l-field-after
+quit

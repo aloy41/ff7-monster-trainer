@@ -1,0 +1,48 @@
+# D2 regression: after playing a loaded save, Game Over -> title -> NEW GAME must start with an empty roster and give
+# the Catch materia again, even when the title -> field transition skips the intro mode (20 -> 1).
+log newgame_after_play
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press ok
+wait 2000
+press ok
+waitmode 1 30000
+wait 3000
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 2000
+write32 9AB108 1
+hud f8
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+log ===== NEW GAME after a played save
+press up
+wait 600
+press ok
+waitmode 1 30000
+wait 4000
+hud f6
+wait 700
+shot n-roster
+hud f6
+quit

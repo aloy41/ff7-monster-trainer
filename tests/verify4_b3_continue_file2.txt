@@ -1,0 +1,69 @@
+# VERIFY4 B3: fresh process, Continue Save 2/GAME 02 (written by B2 from roster 60): roster must come back.
+log VERIFY4 B3 continue_file2
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press right
+wait 300
+shot c22-files
+press ok
+wait 2000
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press down
+wait 300
+shot c22-slots
+press ok
+waitmode 1 30000
+wait 4000
+shot c22-field
+hud f6
+wait 700
+shot c22-roster
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot c22-go
+wait 4500
+shot c22-menu
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 2500
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot c22-after
+hud f6
+quit

@@ -1,0 +1,100 @@
+# VERIFY4 B4: fresh process, Continue Save 1/GAME 05 (written by A, 6+1): roster back; F8 Catch an MP with the monster out and a full party -> PC box.
+log VERIFY4 B4 continue_game05_catch
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+shot c5-files
+press ok
+wait 2000
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press down
+wait 300
+press down
+wait 300
+press down
+wait 300
+press down
+wait 300
+shot c5-slots
+press ok
+waitmode 1 30000
+wait 4000
+shot c5-field
+hud f6
+wait 700
+shot c5-roster
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot k-go
+wait 4500
+shot k-menu
+hud f8
+wait 2500
+shot k-cloudmenu
+press down
+wait 250
+press down
+wait 250
+shot k-cursor
+press ok
+wait 400
+shot k-target
+press ok
+wait 1500
+shot k-msg-#
+wait 600
+shot k-msg-#
+wait 600
+shot k-msg-#
+whilemode 2 150000
+write32 9AB108 9999
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 400
+press ok
+wait 1500
+shot k-msg2-#
+wait 600
+shot k-msg2-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f6
+wait 700
+shot k-roster
+hud f6
+quit

@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "slot": 97,
+  "roster": {
+    "next_uid": 2,
+    "party": [
+      {
+        "uid": 1,
+        "species": 18,
+        "nickname": "Mono Drive",
+        "level": 14,
+        "xp": 5790,
+        "hp": 449,
+        "mp": 123,
+        "known": [
+          276,
+          27
+        ],
+        "equipped": [
+          276,
+          27
+        ],
+        "caught_level": 5,
+        "caught_scene": 0
+      }
+    ],
+    "box": [],
+    "trainer": {
+      "captures": 1,
+      "battles": 3,
+      "legendary_unlocked": false
+    }
+  }
+}

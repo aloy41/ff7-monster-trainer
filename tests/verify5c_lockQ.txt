@@ -1,0 +1,77 @@
+log VERIFY5C lock Q roster 72, enemy at 1 HP killed by the monster, F8 2 s later
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 72
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+write32 9AB2A8 1
+wait 8000
+shot X-menu
+press ok
+wait 500
+press ok
+wait 500
+press ok
+wait 2000
+hud f8
+shot X-a-#
+wait 2000
+shot X-a-#
+wait 2000
+shot X-a-#
+wait 2000
+shot X-a-#
+wait 2000
+shot X-a-#
+wait 2000
+shot X-a-#
+wait 2000
+shot X-a-#
+wait 2000
+shot X-a-#
+wait 2000
+shot X-a-#
+wait 2000
+shot X-a-#
+wait 2000
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot X-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+log --- PASS marker: script end reached
+quit

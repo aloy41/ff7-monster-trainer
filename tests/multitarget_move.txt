@@ -1,0 +1,43 @@
+# D1 regression: the monster's all-target move (Scrutin Eye's Fire, target type 6) used to hit the monster itself
+# and soft-lock the battle (battle_mode 8 forever). Now it must become a single hit on a wild enemy, and the battle
+# must end normally with the spoils screen and a return to the field.
+log multitarget_move
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 95
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 6000
+shot m-menu
+whilemode 2 120000
+press ok
+wait 400
+shot m-target-#
+press ok
+wait 2500
+shot m-#
+end
+log --- battle left (mode now not 2)
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot m-field
+log --- PASS marker: back in the field after the multi-target battle
+quit

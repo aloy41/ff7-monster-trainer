@@ -1,0 +1,45 @@
+# Verification #3 minors: Hammer Blaster L12 -> L37 learns 5 moves (M1: 3 named + "learned 2 more moves!"), and
+# benched Mono Drive / Guard Hound / Sweeper evolve with a message (M2). Roster = the verifier's slot 94 (as 84).
+log growth_burst_bench
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 84
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 3000
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 700
+shot g-#
+wait 700
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 1500
+hud f6
+wait 700
+shot g-roster
+log --- PASS marker: field after the growth burst
+quit

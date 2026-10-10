@@ -1,0 +1,114 @@
+# VERIFY run 4: Continue Save 1 / GAME 01 (save A, gil 1111, 6 party + 1 box). Battle 300: F8 -> Catch an MP at
+# 1 HP while Scrutin Eye is out (expect higher chance, party full -> box). Then a battle where Cloud is at 1 HP and
+# does nothing: Game Over while the monster stands. Title -> Continue Save 2 / GAME 01 (save C, gil 3333): the
+# roster must be save C's (Mono Drive L14), not the in-memory one with the unsaved MP.
+log VERIFY catchout_gameover
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+shot t-files-#
+press ok
+wait 2000
+press up
+wait 400
+shot t-slots-#
+press ok
+waitmode 1 30000
+wait 3000
+dump DC08B4 4
+log ===== battle 300: catch with monster out
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1500
+shot c-go
+wait 3500
+hud f8
+write32 9AB2A8 1
+wait 2500
+shot c-cloudmenu
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 400
+press ok
+wait 2600
+shot c-msg-#
+wait 500
+shot c-msg-#
+wait 500
+shot c-msg-#
+wait 500
+shot c-msg-#
+hud f8
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 3000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot c-roster
+hud f6
+log ===== battle 300: Cloud at 1 HP, does nothing -> Game Over
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 2000
+write32 9AB108 1
+hud f8
+wait 1000
+shot g-#
+whilemode 2 120000
+wait 1500
+shot g-#
+end
+shot g-after-#
+whilemode 26 30000
+wait 1500
+shot g-over-#
+press ok
+end
+waitmode 20 40000
+wait 3000
+shot g-title
+log ===== Continue Save 2 / GAME 01
+press ok
+wait 2500
+press right
+wait 400
+shot t2-files
+press ok
+wait 2000
+shot t2-slots
+press ok
+waitmode 1 30000
+wait 3000
+dump DC08B4 4
+hud f6
+wait 700
+shot t2-roster
+hud f6
+quit

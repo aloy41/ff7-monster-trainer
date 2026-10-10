@@ -1,0 +1,51 @@
+# Map Cloud's battle command menu with the capture kit equipped (where did Steal go?), using FFNx movie skip.
+log menu_map
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+ffnx skip
+wait 15000
+shot 01-after-skip
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+# ATB fills, the command menu opens
+wait 7000
+shot 02-menu-open
+press down
+wait 400
+shot 03-down1
+press down
+wait 400
+shot 04-down2
+press down
+wait 400
+shot 05-down3
+press right
+wait 400
+shot 06-right
+press cancel
+wait 400
+whilemode 2 90000
+press ok
+wait 300
+press ok
+wait 2000
+end
+quit

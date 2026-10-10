@@ -1,0 +1,98 @@
+# VERIFY run 8: Continue Save 1 / GAME 01 (save A, Scrutin Eye). Game Over (Cloud 1 HP, F8, no input). Press
+# through to the title, Continue Save 2 / GAME 01 (save C): roster must be save C's (Mono Drive L14, party 6 box 1).
+log VERIFY gameover_reload
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+shot t-files
+press ok
+wait 2000
+press up
+wait 400
+shot t-slots
+press ok
+waitmode 1 30000
+wait 3000
+dump DC08B4 4
+log ===== Game Over
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 2000
+write32 9AB108 1
+hud f8
+whilemode 2 120000
+wait 1500
+shot go-#
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+shot go-over-#
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 3000
+shot go-title
+log ===== Continue after Game Over: Save 1 / GAME 02 (save B)
+wait 3000
+shot r-title
+press ok
+wait 4000
+shot r-files-0
+press left
+wait 500
+press left
+wait 500
+press left
+wait 500
+press left
+wait 500
+shot r-files-1
+press ok
+wait 3000
+shot r-slots-0
+press ok
+waitmode 1 30000
+wait 3000
+dump DC08B4 4
+hud f6
+wait 700
+shot t2-roster
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot t2-go
+whilemode 2 90000
+press ok
+wait 400
+press ok
+wait 2500
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot t2-end
+quit

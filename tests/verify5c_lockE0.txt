@@ -1,0 +1,76 @@
+log VERIFY5C lock E0 F8 500 ms after the monster's ok
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 95
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 6000
+shot E-menu
+press ok
+wait 500
+press ok
+wait 500
+press ok
+wait 500
+hud f8
+shot E-a-#
+wait 1000
+shot E-a-#
+wait 1000
+shot E-a-#
+wait 1000
+shot E-a-#
+wait 1000
+shot E-a-#
+wait 1000
+shot E-a-#
+wait 1000
+shot E-a-#
+wait 1000
+shot E-a-#
+wait 1000
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot E-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f6
+wait 700
+shot E-roster
+hud f6
+log --- PASS marker: script end reached
+quit

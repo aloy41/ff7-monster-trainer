@@ -1,0 +1,57 @@
+# Phase 3 probe A: does setting the Manipulate status bit on an enemy hand it to the player?
+# actor[5] (2nd MP) status = 0x9AB0DC + 5*0x68 = 0x9AB2E4; Manipulate = bit 22 (0x00400000).
+log probe_manipulate
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 800
+log --- before: battle_context head + actor[5]
+dump 9AB0A0 60
+dump 9AB2E4 104
+or32 9AB2E4 0x00400000
+log --- watching actor[5] with Manipulate set
+wait 4000
+shot 01-manip-4s
+wait 4000
+shot 02-manip-8s
+dump 9AB0A0 60
+dump 9AB2E4 16
+wait 4000
+shot 03-manip-12s
+wait 4000
+shot 04-manip-16s
+wait 4000
+shot 05-manip-20s
+wait 4000
+shot 06-manip-24s
+dump 9AB0A0 60
+dump 9AB2E4 16
+log --- finishing: Cloud attacks
+whilemode 2 60000
+press ok
+wait 300
+press ok
+wait 2000
+end
+quit

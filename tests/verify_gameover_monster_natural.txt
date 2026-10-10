@@ -1,0 +1,75 @@
+# VERIFY run 13: disambiguate the ENCOUNT ERROR. New Game + roster 80, story platform battle (no fieldop), monster
+# out, Cloud 1 HP, F8, no input -> Game Over -> title -> NEW GAME -> walk into the platform battle: id 300 or 0?
+log VERIFY gameover_monster_natural
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 80
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 2000
+write32 9AB108 1
+hud f8
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+log ===== NEW GAME after Game Over with a monster out
+press up
+wait 600
+press ok
+waitmode 1 30000
+wait 4000
+hud f6
+wait 700
+shot n-roster
+hud f6
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 3000
+shot n-battle
+quit

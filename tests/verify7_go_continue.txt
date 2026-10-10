@@ -1,0 +1,204 @@
+log VERIFY7 verify7_go_continue (copy of verify5_h_natural_go_continue)
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 72
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 2000
+shot g-go
+write32 9AB108 1
+hud f8
+wait 3000
+shot g-cloudmenu
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+hud f8
+log ===== Continue Save 1 / GAME 01 after a natural Game Over
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+shot h-files
+press ok
+wait 2000
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+shot h-slots
+press ok
+waitmode 1 30000
+wait 4000
+shot h-field
+hud f6
+wait 700
+shot h-roster
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 5500
+shot h-monstermenu
+write32 9AB108 9999
+wait 2500
+shot h-menu
+hud f8
+wait 2500
+shot h-cloudmenu
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+shot h-target
+press ok
+wait 1000
+shot h-msg-#
+wait 700
+shot h-msg-#
+wait 700
+shot h-msg-#
+wait 700
+shot h-msg-#
+wait 700
+shot h-msg-#
+wait 700
+shot h-msg-#
+wait 700
+shot h-msg-#
+wait 700
+shot h-msg-#
+wait 700
+shot h-msg-#
+wait 700
+shot h-msg-#
+wait 700
+hud f8
+write32 9AB108 9999
+wait 2500
+shot h2-menu
+hud f8
+wait 2500
+shot h2-cloudmenu
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+shot h2-target
+press ok
+wait 1000
+shot h2-msg-#
+wait 700
+shot h2-msg-#
+wait 700
+shot h2-msg-#
+wait 700
+shot h2-msg-#
+wait 700
+shot h2-msg-#
+wait 700
+shot h2-msg-#
+wait 700
+shot h2-msg-#
+wait 700
+shot h2-msg-#
+wait 700
+shot h2-msg-#
+wait 700
+shot h2-msg-#
+wait 700
+hud f8
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 150000
+write32 9AB108 9999
+press ok
+wait 400
+press ok
+wait 2000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot h-after
+hud f6
+log --- PASS marker: script end reached
+quit

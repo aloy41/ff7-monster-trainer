@@ -1,0 +1,313 @@
+# VERIFY3 run D: D1 multi-target/toggle monster moves not tried by earlier rounds (Swift Bolt, Big Pollen, L4 Death,
+# Grand Sword, Body Tail, Extreme Bomber). core load 95; battle 300 per lead with OK spam; F5 between.
+# First battle also: cursor onto the empty 2nd Manipulate row, then back up (menu must recover).
+# Last: F8 -> Catch an MP with the monster out while the party is full (-> PC box).
+log VERIFY5 I multitarget
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 95
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 2500
+hud f6
+wait 700
+shot a-roster
+hud f6
+log ===== battle 300 lead ninja
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot ninja-go
+wait 4500
+shot ninja-menu
+press down
+wait 400
+press ok
+wait 400
+press ok
+wait 1500
+shot ninja-emptyrow
+press up
+wait 400
+shot ninja-backup
+press ok
+wait 500
+shot ninja-target
+press ok
+wait 1000
+shot ninja-act-#
+wait 1000
+shot ninja-act-#
+wait 1000
+shot ninja-act-#
+wait 1000
+shot ninja-act-#
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 2500
+shot ninja-t-#
+end
+log --- battle ninja left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot ninja-field
+hud f5
+wait 800
+log ===== battle 300 lead hochu
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot hochu-go
+wait 4500
+shot hochu-menu
+press ok
+wait 500
+shot hochu-target
+press ok
+wait 1000
+shot hochu-act-#
+wait 1000
+shot hochu-act-#
+wait 1000
+shot hochu-act-#
+wait 1000
+shot hochu-act-#
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 2500
+shot hochu-t-#
+end
+log --- battle hochu left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot hochu-field
+hud f5
+wait 800
+log ===== battle 300 lead gargoyle
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot gargoyle-go
+wait 4500
+shot gargoyle-menu
+press ok
+wait 500
+shot gargoyle-target
+press ok
+wait 1000
+shot gargoyle-act-#
+wait 1000
+shot gargoyle-act-#
+wait 1000
+shot gargoyle-act-#
+wait 1000
+shot gargoyle-act-#
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 2500
+shot gargoyle-t-#
+end
+log --- battle gargoyle left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot gargoyle-field
+hud f5
+wait 800
+log ===== battle 300 lead ironman
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot ironman-go
+wait 4500
+shot ironman-menu
+press ok
+wait 500
+shot ironman-target
+press ok
+wait 1000
+shot ironman-act-#
+wait 1000
+shot ironman-act-#
+wait 1000
+shot ironman-act-#
+wait 1000
+shot ironman-act-#
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 2500
+shot ironman-t-#
+end
+log --- battle ironman left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot ironman-field
+hud f5
+wait 800
+log ===== battle 300 lead dragonzombie
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot dragonzombie-go
+wait 4500
+shot dragonzombie-menu
+press ok
+wait 500
+shot dragonzombie-target
+press ok
+wait 1000
+shot dragonzombie-act-#
+wait 1000
+shot dragonzombie-act-#
+wait 1000
+shot dragonzombie-act-#
+wait 1000
+shot dragonzombie-act-#
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 2500
+shot dragonzombie-t-#
+end
+log --- battle dragonzombie left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot dragonzombie-field
+hud f5
+wait 800
+log ===== battle 300 lead headbomber
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot headbomber-go
+wait 4500
+shot headbomber-menu
+press ok
+wait 500
+shot headbomber-target
+press ok
+wait 1000
+shot headbomber-act-#
+wait 1000
+shot headbomber-act-#
+wait 1000
+shot headbomber-act-#
+wait 1000
+shot headbomber-act-#
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 2500
+shot headbomber-t-#
+end
+log --- battle headbomber left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot headbomber-field
+hud f5
+wait 800
+log ===== Catch with the monster out, party full
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 6000
+hud f8
+wait 2500
+shot k-cloudmenu
+whilemode 2 150000
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 400
+press ok
+wait 1500
+shot k-msg-#
+wait 600
+shot k-msg-#
+wait 600
+shot k-msg-#
+wait 600
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+hud f8
+hud f6
+wait 700
+shot k-roster
+hud f6
+log --- PASS marker: script end reached
+quit

@@ -1,0 +1,169 @@
+# VERIFY4 F: D6 after Continue. Continue Save 1/GAME 04 -> natural battle -> natural Game Over -> Continue Save 1/GAME 02
+# (Bomb) -> materia menu, natural battle: F8 -> Cloud's command must read Catch; Catch an MP.
+log VERIFY4 F natural_go_continue
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press ok
+wait 2000
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press down
+wait 300
+press down
+wait 300
+press down
+wait 300
+shot g4-slots
+press ok
+waitmode 1 30000
+wait 3000
+hud f6
+wait 700
+shot g4-roster
+hud f6
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 2000
+write32 9AB108 1
+hud f8
+wait 3000
+shot g4-cloudmenu
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+hud f8
+log ===== Continue Save 1 / GAME 02 after a natural Game Over
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press ok
+wait 2000
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press down
+wait 300
+shot g2-slots
+press ok
+waitmode 1 30000
+wait 3000
+shot g2-field
+hud f6
+wait 700
+shot g2-roster
+hud f6
+press menu
+wait 2500
+press down
+wait 300
+press down
+wait 300
+press ok
+wait 2000
+shot g2-materia
+whilemode 5 15000
+press cancel
+wait 1200
+end
+wait 1500
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 2000
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 4000
+shot g2-monstermenu
+hud f8
+wait 2500
+shot g2-cloudmenu
+press down
+wait 250
+press down
+wait 250
+shot g2-cursor
+press ok
+wait 400
+press ok
+wait 1500
+shot g2-msg-#
+wait 600
+shot g2-msg-#
+wait 600
+shot g2-msg-#
+whilemode 2 150000
+write32 9AB108 9999
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 400
+press ok
+wait 1500
+shot g2-msg2-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f6
+wait 700
+shot g2-after
+hud f6
+quit

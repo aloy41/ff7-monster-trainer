@@ -1,0 +1,422 @@
+log VERIFY5B I multitarget
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 95
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+hud f6
+wait 700
+shot a-roster
+hud f6
+log ===== battle 300 lead ninja
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot ninja-go
+wait 4500
+shot ninja-menu
+press ok
+wait 500
+shot ninja-moves
+press ok
+wait 500
+shot ninja-target
+press ok
+wait 1000
+shot ninja-act-#
+wait 1000
+shot ninja-act-#
+wait 1000
+shot ninja-act-#
+wait 3000
+write32 9AB2A8 1
+write32 9AB310 1
+hud f8
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot ninja-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f5
+wait 800
+log ===== battle 300 lead hochu
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot hochu-go
+wait 4500
+shot hochu-menu
+press ok
+wait 500
+shot hochu-moves
+press ok
+wait 500
+shot hochu-target
+press ok
+wait 1000
+shot hochu-act-#
+wait 1000
+shot hochu-act-#
+wait 1000
+shot hochu-act-#
+wait 3000
+write32 9AB2A8 1
+write32 9AB310 1
+hud f8
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot hochu-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f5
+wait 800
+log ===== battle 300 lead gargoyle
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot gargoyle-go
+wait 4500
+shot gargoyle-menu
+press ok
+wait 500
+shot gargoyle-moves
+press ok
+wait 500
+shot gargoyle-target
+press ok
+wait 1000
+shot gargoyle-act-#
+wait 1000
+shot gargoyle-act-#
+wait 1000
+shot gargoyle-act-#
+wait 3000
+write32 9AB2A8 1
+write32 9AB310 1
+hud f8
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot gargoyle-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f5
+wait 800
+log ===== battle 300 lead ironman
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot ironman-go
+wait 4500
+shot ironman-menu
+press ok
+wait 500
+shot ironman-moves
+press ok
+wait 500
+shot ironman-target
+press ok
+wait 1000
+shot ironman-act-#
+wait 1000
+shot ironman-act-#
+wait 1000
+shot ironman-act-#
+wait 3000
+write32 9AB2A8 1
+write32 9AB310 1
+hud f8
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot ironman-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f5
+wait 800
+log ===== battle 300 lead dragonzombie
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot dragonzombie-go
+wait 4500
+shot dragonzombie-menu
+press ok
+wait 500
+shot dragonzombie-moves
+press ok
+wait 500
+shot dragonzombie-target
+press ok
+wait 1000
+shot dragonzombie-act-#
+wait 1000
+shot dragonzombie-act-#
+wait 1000
+shot dragonzombie-act-#
+wait 3000
+write32 9AB2A8 1
+write32 9AB310 1
+hud f8
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot dragonzombie-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f5
+wait 800
+log ===== battle 300 lead headbomber
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot headbomber-go
+wait 4500
+shot headbomber-menu
+press ok
+wait 500
+shot headbomber-moves
+press ok
+wait 500
+shot headbomber-target
+press ok
+wait 1000
+shot headbomber-act-#
+wait 1000
+shot headbomber-act-#
+wait 1000
+shot headbomber-act-#
+wait 3000
+write32 9AB2A8 1
+write32 9AB310 1
+hud f8
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot headbomber-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f5
+wait 800
+log ===== Catch with the monster out, party full
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+write32 9AB108 9999
+wait 7000
+shot k-menu
+hud f8
+wait 3000
+shot k-cloudmenu
+press down
+wait 300
+press down
+wait 300
+shot k-cursor
+press ok
+wait 600
+shot k-target
+press ok
+wait 1000
+shot k-msg-#
+wait 1000
+shot k-msg-#
+wait 1000
+shot k-msg-#
+wait 1000
+shot k-msg-#
+wait 1000
+shot k-msg-#
+wait 1000
+shot k-msg-#
+wait 1000
+shot k-msg-#
+wait 1000
+shot k-msg-#
+wait 1000
+shot k-msg-#
+wait 1000
+shot k-msg-#
+wait 1000
+shot k-msg-#
+wait 1000
+shot k-msg-#
+wait 1000
+write32 9AB108 9999
+wait 12000
+hud f8
+wait 500
+write32 9AB108 9999
+wait 7000
+shot k2-menu
+hud f8
+wait 3000
+shot k2-cloudmenu
+press down
+wait 300
+press down
+wait 300
+shot k2-cursor
+press ok
+wait 600
+shot k2-target
+press ok
+wait 1000
+shot k2-msg-#
+wait 1000
+shot k2-msg-#
+wait 1000
+shot k2-msg-#
+wait 1000
+shot k2-msg-#
+wait 1000
+shot k2-msg-#
+wait 1000
+shot k2-msg-#
+wait 1000
+shot k2-msg-#
+wait 1000
+shot k2-msg-#
+wait 1000
+shot k2-msg-#
+wait 1000
+shot k2-msg-#
+wait 1000
+shot k2-msg-#
+wait 1000
+shot k2-msg-#
+wait 1000
+write32 9AB108 9999
+wait 12000
+hud f8
+wait 500
+write32 9AB2A8 1
+write32 9AB310 1
+hud f8
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f6
+wait 700
+shot k-roster
+hud f6
+log --- PASS marker: script end reached
+quit

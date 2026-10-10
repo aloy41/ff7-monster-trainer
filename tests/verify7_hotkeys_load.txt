@@ -1,0 +1,546 @@
+log VERIFY7 verify7_hotkeys_load
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 93
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+hud f6
+wait 700
+shot h93-roster
+hud f6
+wait 300
+shot h93-field
+log --- F5 #1
+hud f5
+wait 800
+shot f5-1-field
+hud f6
+wait 700
+shot f5-1-roster
+hud f6
+wait 300
+log --- F5 #2
+hud f5
+wait 800
+shot f5-2-field
+hud f6
+wait 700
+shot f5-2-roster
+hud f6
+wait 300
+log --- F5 #3
+hud f5
+wait 800
+shot f5-3-field
+hud f6
+wait 700
+shot f5-3-roster
+hud f6
+wait 300
+log --- F5 #4
+hud f5
+wait 800
+shot f5-4-field
+hud f6
+wait 700
+shot f5-4-roster
+hud f6
+wait 300
+log --- F5 #5
+hud f5
+wait 800
+shot f5-5-field
+hud f6
+wait 700
+shot f5-5-roster
+hud f6
+wait 300
+log --- F5 #6
+hud f5
+wait 800
+shot f5-6-field
+hud f6
+wait 700
+shot f5-6-roster
+hud f6
+wait 300
+log --- F7 #1
+hud f7
+wait 800
+hud f6
+wait 700
+shot f7-1-roster
+hud f6
+wait 300
+log --- F7 #2
+hud f7
+wait 800
+hud f6
+wait 700
+shot f7-2-roster
+hud f6
+wait 300
+log ===== battle 300: HUD, F5/F7 ignored in battle, F6 in battle
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 2500
+shot hb-go
+hud f5
+wait 500
+hud f7
+wait 500
+hud f6
+wait 700
+shot hb-f6
+hud f6
+wait 300
+log --- hb: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot hb-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- hb: battle over
+quitifnotmode 1
+hud f6
+wait 700
+shot h-after-roster
+hud f6
+wait 300
+log ===== core load 31
+core load 31
+wait 1500
+shot l31-field
+hud f6
+wait 700
+shot l31-roster
+hud f6
+wait 300
+log ===== battle 300 with roster 31
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 2500
+shot lb31-go
+wait 3000
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 4000
+shot lb31-mid
+log --- lb31: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot lb31-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- lb31: battle over
+quitifnotmode 1
+hud f6
+wait 700
+shot lb31-after
+hud f6
+wait 300
+log ===== core load 32
+core load 32
+wait 1500
+shot l32-field
+hud f6
+wait 700
+shot l32-roster
+hud f6
+wait 300
+log ===== battle 300 with roster 32
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 2500
+shot lb32-go
+wait 3000
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 4000
+shot lb32-mid
+log --- lb32: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot lb32-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- lb32: battle over
+quitifnotmode 1
+hud f6
+wait 700
+shot lb32-after
+hud f6
+wait 300
+log ===== core load 33
+core load 33
+wait 1500
+shot l33-field
+hud f6
+wait 700
+shot l33-roster
+hud f6
+wait 300
+log ===== battle 300 with roster 33
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 2500
+shot lb33-go
+wait 3000
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 4000
+shot lb33-mid
+log --- lb33: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot lb33-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- lb33: battle over
+quitifnotmode 1
+hud f6
+wait 700
+shot lb33-after
+hud f6
+wait 300
+log ===== core load 34
+core load 34
+wait 1500
+shot l34-field
+hud f6
+wait 700
+shot l34-roster
+hud f6
+wait 300
+log ===== core load 35
+core load 35
+wait 1500
+shot l35-field
+hud f6
+wait 700
+shot l35-roster
+hud f6
+wait 300
+log ===== core load 36
+core load 36
+wait 1500
+shot l36-field
+hud f6
+wait 700
+shot l36-roster
+hud f6
+wait 300
+log ===== battle 300 with roster 36
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 2500
+shot lb36-go
+wait 3000
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 4000
+shot lb36-mid
+log --- lb36: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot lb36-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- lb36: battle over
+quitifnotmode 1
+hud f6
+wait 700
+shot lb36-after
+hud f6
+wait 300
+log ===== core load 37
+core load 37
+wait 1500
+shot l37-field
+hud f6
+wait 700
+shot l37-roster
+hud f6
+wait 300
+log ===== battle 300 with roster 37
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 2500
+shot lb37-go
+wait 3000
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 4000
+shot lb37-mid
+log --- lb37: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot lb37-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- lb37: battle over
+quitifnotmode 1
+hud f6
+wait 700
+shot lb37-after
+hud f6
+wait 300
+log ===== core load 38
+core load 38
+wait 1500
+shot l38-field
+hud f6
+wait 700
+shot l38-roster
+hud f6
+wait 300
+log ===== battle 300 with roster 38
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 2500
+shot lb38-go
+wait 3000
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+wait 4000
+shot lb38-mid
+log --- lb38: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 120000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot lb38-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log --- lb38: battle over
+quitifnotmode 1
+hud f6
+wait 700
+shot lb38-after
+hud f6
+wait 300
+log --- PASS marker: script end reached
+quit

@@ -1,0 +1,460 @@
+log VERIFY7 verify7_mobile (copy of verify6_mobile)
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+log ===== 836 Grosspanzer
+fieldop 70 00 44 03
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 3000
+write32 9AB108 9999
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+shot M-k0
+write32 9AB108 9999
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+shot M-k1
+write32 9AB108 9999
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+shot M-k2
+write32 9AB108 9999
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+shot M-k3
+write32 9AB108 9999
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+press ok
+wait 110
+shot M-k4
+log --- now Catch the Mobile
+write32 9AB108 9999
+wait 9000
+shot M-c0-menu
+press down
+wait 300
+press down
+wait 300
+shot M-c0-cursor
+press ok
+wait 600
+shot M-c0-target
+press ok
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+wait 1000
+shot M-c0-msg-#
+write32 9AB108 9999
+wait 9000
+shot M-c1-menu
+press down
+wait 300
+press down
+wait 300
+shot M-c1-cursor
+press ok
+wait 600
+shot M-c1-target
+press ok
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+wait 1000
+shot M-c1-msg-#
+write32 9AB108 9999
+wait 9000
+shot M-c2-menu
+press down
+wait 300
+press down
+wait 300
+shot M-c2-cursor
+press ok
+wait 600
+shot M-c2-target
+press ok
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+wait 1000
+shot M-c2-msg-#
+write32 9AB3E0 1
+log --- M: end phase (enemies to 1 HP)
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot M-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+quitifnotmode 1
+log --- PASS marker: script end reached
+quit

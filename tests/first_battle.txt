@@ -1,0 +1,49 @@
+# Phase 1 oracle: New Game -> opening FMV -> walk into the first battle (2 MPs, battle 300) -> win -> spoils.
+# Checks in trainer.log: SCENE battle_id=300 enemies MP/Guard Hound, actor HP changes, ACTION lines, BATTLE-END.
+log first_battle
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+# opening FMV (~2:40, runs in field mode), then Barret's cutscene
+wait 170000
+shot 01-after-fmv
+wait 8000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+shot 02-platform
+# walk up the platform until the guards attack
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 2500
+shot 03-battle
+# Attack until the battle ends: OK opens Attack, OK picks the default target
+whilemode 2 90000
+press ok
+wait 300
+press ok
+wait 1500
+end
+wait 2000
+shot 04-spoils
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 3000
+shot 05-after
+quit

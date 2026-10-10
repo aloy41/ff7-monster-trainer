@@ -1,0 +1,56 @@
+# Phase 3 v1: send out an INJECTED species (Mono Drive, not in scene 300) in the first battle.
+# Expect: SENDOUT plan (placement 2 / actor 6) -> SENDOUT go -> Cloud's turns are the MP's moves, retargeted at the
+# wild MPs -> wild side cleared -> XP/growth -> battle ends normally.
+log companions_stay_out
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 98
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+log --- Barret joins the field party (savemap party_members[1] = 1), after the opening cutscene
+write8 DC0231 1
+dump DC0230 4
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 2500
+shot 01-battle
+wait 4000
+shot 02-menu
+dump DC0230 4
+dump 41BE18 16
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 3500
+dump 41BE18 16
+end
+wait 2000
+shot 04-spoils
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 3000
+log --- back in the field: Barret restored?
+dump DC0230 4
+quit

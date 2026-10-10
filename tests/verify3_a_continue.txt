@@ -1,0 +1,197 @@
+# VERIFY3 run A: N3 + D1. Continue Save 1 / GAME 01 (earlier verifiers' HP-9999 save; roster = Scrutin Eye with
+# removed kernel spells equipped). Roster must load and stay; battle 300 OK-spam to the end (no soft-lock).
+# Then Game Over -> Continue Save 1 / GAME 02 (Bomb L18) -> roster must load and stay; battle 300 Bomb out.
+log VERIFY3 A continue
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+shot a-files
+press ok
+wait 2000
+press up
+wait 300
+press up
+wait 300
+press up
+wait 400
+shot a-slots
+press ok
+waitmode 1 30000
+wait 3000
+dump DC08B4 4
+shot a-field
+hud f6
+wait 700
+shot a-roster
+hud f6
+log ===== A battle 300 #1 (Scrutin Eye lead, spells must be gone)
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot a1-go
+wait 4500
+shot a1-menu
+press ok
+wait 500
+shot a1-target
+press ok
+wait 1200
+shot a1-act-#
+wait 1200
+shot a1-act-#
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 2500
+shot a1-t-#
+end
+log --- A battle 1 left
+whilemode 17 40000
+shot a1-sp-#
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot a1-roster
+hud f6
+log ===== A battle 300 #2 (roster must still be there)
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 6000
+shot a2-menu
+press down
+wait 300
+press ok
+wait 400
+press ok
+wait 2500
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 2500
+shot a2-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot a2-roster
+hud f6
+log ===== Game Over
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 2000
+write32 9AB108 1
+hud f8
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+log ===== Continue Save 1 / GAME 02 (Bomb)
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press ok
+wait 2000
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press down
+wait 400
+shot b-slots
+press ok
+waitmode 1 30000
+wait 5000
+log --- 5 s after Continue GAME 02
+shot b-field
+hud f6
+wait 700
+shot b-roster
+hud f6
+whilemode 2 120000
+log --- (a battle started after Continue: the accepted fieldop-70 Game Over artifact)
+press ok
+wait 400
+press ok
+wait 2500
+shot b-art-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 30000
+wait 2000
+hud f6
+wait 700
+shot b-roster2
+hud f6
+log ===== B battle 300 Bomb out
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot b1-go
+wait 4500
+shot b1-menu
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 2500
+shot b1-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot b1-roster
+hud f6
+quit

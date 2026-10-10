@@ -1,0 +1,178 @@
+{
+ "version": 1,
+ "slot": 63,
+ "roster": {
+  "next_uid": 10,
+  "party": [
+   {
+    "uid": 1,
+    "species": 293,
+    "nickname": "Grosspanzer-Mobile",
+    "level": 50,
+    "xp": 273340,
+    "hp": 9999,
+    "mp": 999,
+    "known": [
+     301,
+     424
+    ],
+    "equipped": [
+     301,
+     424
+    ],
+    "caught_level": 50,
+    "caught_scene": 0
+   },
+   {
+    "uid": 2,
+    "species": 60,
+    "nickname": "Grenade Combatant",
+    "level": 99,
+    "xp": 2432386,
+    "hp": 99999,
+    "mp": 999,
+    "known": [
+     272,
+     380
+    ],
+    "equipped": [
+     272,
+     380
+    ],
+    "caught_level": 99,
+    "caught_scene": 0
+   },
+   {
+    "uid": 3,
+    "species": 15,
+    "nickname": "Eye",
+    "level": 50,
+    "xp": 273340,
+    "hp": 9999,
+    "mp": 999,
+    "known": [
+     989
+    ],
+    "equipped": [
+     989
+    ],
+    "caught_level": 50,
+    "caught_scene": 0
+   },
+   {
+    "uid": 4,
+    "species": 292,
+    "nickname": "Grosspanzer-Small",
+    "level": 42,
+    "xp": 156457,
+    "hp": 0,
+    "mp": 999,
+    "known": [
+     742
+    ],
+    "equipped": [
+     742
+    ],
+    "caught_level": 42,
+    "caught_scene": 0
+   },
+   {
+    "uid": 5,
+    "species": 355,
+    "nickname": "Mystery Ninja",
+    "level": 30,
+    "xp": 53307,
+    "hp": 9999,
+    "mp": 999,
+    "known": [
+     866,
+     862
+    ],
+    "equipped": [
+     866,
+     862
+    ],
+    "caught_level": 30,
+    "caught_scene": 0
+   },
+   {
+    "uid": 6,
+    "species": 73,
+    "nickname": "Custom Sweeper",
+    "level": 40,
+    "xp": 133841,
+    "hp": 9999,
+    "mp": 999,
+    "known": [
+     280,
+     281
+    ],
+    "equipped": [
+     280,
+     281
+    ],
+    "caught_level": 40,
+    "caught_scene": 0
+   }
+  ],
+  "box": [
+   {
+    "uid": 7,
+    "species": 152,
+    "nickname": "Yang",
+    "level": 24,
+    "xp": 26102,
+    "hp": 9999,
+    "mp": 999,
+    "known": [
+     576
+    ],
+    "equipped": [
+     576
+    ],
+    "caught_level": 24,
+    "caught_scene": 0
+   },
+   {
+    "uid": 8,
+    "species": 362,
+    "nickname": "Bad Rap Sample",
+    "level": 40,
+    "xp": 133841,
+    "hp": 9999,
+    "mp": 999,
+    "known": [
+     384
+    ],
+    "equipped": [
+     384
+    ],
+    "caught_level": 40,
+    "caught_scene": 0
+   },
+   {
+    "uid": 9,
+    "species": 119,
+    "nickname": "Touch Me",
+    "level": 30,
+    "xp": 53307,
+    "hp": 9999,
+    "mp": 999,
+    "known": [
+     511
+    ],
+    "equipped": [
+     511
+    ],
+    "caught_level": 30,
+    "caught_scene": 0
+   }
+  ],
+  "trainer": {
+   "captures": 9,
+   "battles": 0,
+   "legendary_unlocked": false,
+   "kit_given": true
+  }
+ }
+}

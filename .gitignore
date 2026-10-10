@@ -1,0 +1,16 @@
+# Derived from the player's own game files: never commit
+out/
+*.lgp
+*.bin
+*.ff7
+ff7*.exe
+
+# Build output
+hook/build/
+core/target/
+release/dist/
+__pycache__/
+
+# Test runs (logs, screenshots, sweep results)
+tests/out/
+tests/sweep/

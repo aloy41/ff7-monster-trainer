@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "slot": 86,
+  "roster": {
+    "next_uid": 7,
+    "party": [
+      {
+        "uid": 1,
+        "species": 320,
+        "nickname": "Iron Man",
+        "level": 46,
+        "xp": 209326,
+        "hp": 1000,
+        "mp": 80,
+        "known": [
+          840
+        ],
+        "equipped": [
+          840
+        ],
+        "caught_level": 46,
+        "caught_scene": 0
+      },
+      {
+        "uid": 2,
+        "species": 315,
+        "nickname": "Dragon Zombie",
+        "level": 54,
+        "xp": 349671,
+        "hp": 1000,
+        "mp": 80,
+        "known": [
+          825
+        ],
+        "equipped": [
+          825
+        ],
+        "caught_level": 54,
+        "caught_scene": 0
+      },
+      {
+        "uid": 3,
+        "species": 218,
+        "nickname": "Headbomber",
+        "level": 35,
+        "xp": 87300,
+        "hp": 1000,
+        "mp": 80,
+        "known": [
+          691
+        ],
+        "equipped": [
+          691
+        ],
+        "caught_level": 35,
+        "caught_scene": 0
+      },
+      {
+        "uid": 4,
+        "species": 293,
+        "nickname": "Grosspanzer?Mobile",
+        "level": 50,
+        "xp": 273340,
+        "hp": 1000,
+        "mp": 80,
+        "known": [
+          742
+        ],
+        "equipped": [
+          742
+        ],
+        "caught_level": 50,
+        "caught_scene": 0
+      },
+      {
+        "uid": 5,
+        "species": 292,
+        "nickname": "Grosspanzer?Small",
+        "level": 50,
+        "xp": 273340,
+        "hp": 1000,
+        "mp": 80,
+        "known": [
+          742
+        ],
+        "equipped": [
+          742
+        ],
+        "caught_level": 50,
+        "caught_scene": 0
+      },
+      {
+        "uid": 6,
+        "species": 293,
+        "nickname": "Grosspanzer?Mobile",
+        "level": 50,
+        "xp": 273340,
+        "hp": 1000,
+        "mp": 80,
+        "known": [
+          793
+        ],
+        "equipped": [
+          793
+        ],
+        "caught_level": 50,
+        "caught_scene": 0
+      }
+    ],
+    "box": [],
+    "trainer": {
+      "captures": 6,
+      "battles": 0,
+      "legendary_unlocked": false,
+      "kit_given": true
+    }
+  }
+}

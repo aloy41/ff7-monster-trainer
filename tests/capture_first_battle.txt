@@ -1,0 +1,60 @@
+# Phase 2 slice: New Game -> first battle (2 MPs) -> Cloud captures with Steal -> roster autosaved.
+# Checks in trainer.log: SCENE battle_id=300 enemies MP/Guard Hound, actor HP changes, ACTION lines, BATTLE-END.
+log capture_first_battle
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+ffnx skip
+wait 15000
+shot 01-after-fmv
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+shot 02-platform
+# walk up the platform until the guards attack
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 2500
+shot 03-battle
+shot 03b-menu
+# Capture: Cloud's menu is Attack / Magic / Steal / Item (tests/menu_map.txt) -> Down x2, OK (Steal), OK (target)
+wait 5000
+whilemode 2 120000
+press down
+wait 250
+press down
+wait 250
+shot 04-steal-cursor
+press ok
+wait 400
+press ok
+wait 2600
+shot msg-#
+wait 600
+shot msg-#
+wait 800
+end
+wait 2000
+shot 05-spoils
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 3000
+shot 06-after
+quit

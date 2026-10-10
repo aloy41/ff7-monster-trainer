@@ -1,0 +1,210 @@
+# VERIFY2 run 2: (a) Continue Save 1 / GAME 01 and dump the savemap compare range (why did the roster get wiped?).
+# (b) Game Over -> NEW GAME: empty roster + Catch kit (D2). (c) natural first battle: Catch MPs. (d) save to GAME 01
+# slot 3. (e) Game Over -> Continue GAME 01 slot 3: the caught monsters must come back. (f) battle 300 send-out.
+log VERIFY2 saveload_newgame
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press ok
+wait 2000
+press up
+wait 400
+shot a-slots
+press ok
+waitmode 1 30000
+wait 3000
+log ===== savemap after Continue of Save 1 / GAME 01
+dump DBFD8C 2860
+hud f6
+wait 700
+shot a-roster
+hud f6
+log ===== Game Over
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 2000
+write32 9AB108 1
+hud f8
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+log ===== NEW GAME after a played save
+press up
+wait 600
+shot n-title
+press ok
+waitmode 1 30000
+wait 4000
+hud f6
+wait 700
+shot n-roster
+hud f6
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 6000
+shot c-menu
+log ===== catching in the natural first battle
+whilemode 2 150000
+press down
+wait 250
+press down
+wait 250
+shot c-cursor-#
+press ok
+wait 400
+press ok
+wait 2600
+shot c-msg-#
+wait 600
+shot c-msg-#
+wait 800
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+hud f6
+wait 800
+shot c-roster
+hud f6
+log ===== open the materia check: menu
+press menu
+wait 2000
+shot m-menu
+press cancel
+wait 1500
+log ===== save to GAME 01 slot 3
+fieldop 49 00 0E 00
+wait 2500
+shot s-1-files
+press ok
+wait 1500
+press down
+wait 400
+press down
+wait 400
+shot s-2-slots
+press ok
+wait 1500
+shot s-3-confirm
+press ok
+wait 2500
+shot s-4-done
+press ok
+wait 1500
+press cancel
+wait 1500
+press cancel
+wait 2000
+shot s-5-field
+log ===== Game Over 2
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 2000
+write32 9AB108 1
+hud f8
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+log ===== Continue GAME 01 slot 3
+shot r-title
+press ok
+wait 4000
+press left
+wait 500
+press left
+wait 500
+press left
+wait 500
+press left
+wait 500
+shot r-files
+press ok
+wait 3000
+press down
+wait 400
+press down
+wait 400
+shot r-slots
+press ok
+waitmode 1 30000
+wait 3000
+dump DC08B4 4
+hud f6
+wait 700
+shot r-roster
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot r-go
+wait 4000
+shot r-menu
+whilemode 2 90000
+press ok
+wait 400
+press ok
+wait 2500
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot r-end
+quit

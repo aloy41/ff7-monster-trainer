@@ -1,0 +1,189 @@
+# VERIFY3 run C2: growth burst (core load 94) with Barret in the field party; faint; next lead; inn; no-room 48/27.
+log VERIFY3 C2 growth_companions_faint
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 94
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 2500
+hud f6
+wait 700
+shot g-before
+hud f6
+log --- Barret joins the field party
+write8 DC0231 1
+dump DC0230 4
+log ===== growth burst: core load 94, battle 300
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 6000
+shot g-menu
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 500
+shot g-t-#
+wait 500
+shot g-t-#
+wait 500
+shot g-t-#
+wait 500
+shot g-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+log --- back in the field: Barret restored?
+dump DC0230 4
+hud f6
+wait 700
+shot g-roster
+hud f6
+log ===== faint: battle 300, monster 1 HP, F8 (Cloud's own turns)
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1500
+write32 9AB378 1
+hud f8
+wait 1000
+shot fa-#
+wait 2000
+shot fa-#
+wait 2000
+shot fa-#
+wait 2000
+shot fa-#
+wait 2000
+shot fa-#
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+shot fa-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f6
+wait 700
+shot fa-roster
+hud f6
+log ===== next battle: next conscious monster leads
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1500
+shot nx-go
+wait 4500
+shot nx-menu
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log ===== inn: fieldop 3E
+fieldop 3E
+wait 1500
+hud f6
+wait 700
+shot inn-roster
+hud f6
+log ===== 48 three types placed (no room)
+fieldop 70 00 30 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1500
+shot nr48-#
+wait 1500
+shot nr48-#
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+log ===== 27 six placed (no room)
+fieldop 70 00 1B 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1500
+shot nr27-#
+wait 1500
+shot nr27-#
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+write32 9AB448 1
+write32 9AB4B0 1
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+shot z-field
+hud f6
+wait 700
+shot z-roster
+hud f6
+quit

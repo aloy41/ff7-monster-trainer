@@ -1,0 +1,264 @@
+log VERIFY6 verify6_saves
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 72
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+hud f6
+wait 700
+shot r72
+hud f6
+wait 300
+log ===== save file 1 slot 2
+write32 DC08B4 61002
+fieldop 49 00 0E 00
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+shot s12-files
+press ok
+wait 1500
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press down
+wait 300
+shot s12-slots
+press ok
+wait 1500
+shot s12-confirm
+press ok
+wait 2500
+shot s12-done
+whilemode 5 30000
+press cancel
+wait 1500
+end
+waitmode 1 10000
+wait 1500
+core load 64
+wait 1500
+hud f6
+wait 700
+shot r64
+hud f6
+wait 300
+log ===== save file 2 slot 4
+write32 DC08B4 62004
+fieldop 49 00 0E 00
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press right
+wait 300
+shot s24-files
+press ok
+wait 1500
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press down
+wait 300
+press down
+wait 300
+press down
+wait 300
+shot s24-slots
+press ok
+wait 1500
+shot s24-confirm
+press ok
+wait 2500
+shot s24-done
+whilemode 5 30000
+press cancel
+wait 1500
+end
+waitmode 1 10000
+wait 1500
+core load 61
+wait 1500
+hud f6
+wait 700
+shot r61
+hud f6
+wait 300
+log ===== save file 2 slot 1
+write32 DC08B4 62001
+fieldop 49 00 0E 00
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press right
+wait 300
+shot s21-files
+press ok
+wait 1500
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+shot s21-slots
+press ok
+wait 1500
+shot s21-confirm
+press ok
+wait 2500
+shot s21-done
+whilemode 5 30000
+press cancel
+wait 1500
+end
+waitmode 1 10000
+wait 1500
+core load 64
+wait 1500
+log ===== bx: battle 300
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1500
+shot bx-go
+wait 3000
+shot bx-menu
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 150000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot rx-end
+hud f6
+wait 300
+log --- PASS marker: script end reached
+quit

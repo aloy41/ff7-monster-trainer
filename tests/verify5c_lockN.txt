@@ -1,0 +1,115 @@
+log VERIFY5C lock N natural battle
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 64
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 6000
+shot N-menu
+press ok
+wait 500
+press ok
+wait 500
+press ok
+wait 3000
+hud f8
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+write32 9AB108 300
+shot N-a-#
+wait 2000
+whilemode 2 240000
+write32 9AB108 9999
+press cancel
+wait 300
+press ok
+wait 400
+press ok
+wait 2000
+shot N-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+log --- PASS marker: script end reached
+quit

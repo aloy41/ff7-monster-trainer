@@ -1,0 +1,127 @@
+# VERIFY run 1: fresh New Game (no roster), Catch kit given, catch the MPs in battle 300, then boss 324 with the
+# caught MP sent out: F8 -> Cloud's menu -> Catch on Guard Scorpion -> "can't be caught!". Then a Bomb battle (500).
+log VERIFY catch_boss
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+shot field-before
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 6000
+shot b1-menu
+log --- catching in battle 300
+whilemode 2 150000
+press down
+wait 250
+press down
+wait 250
+shot b1-cursor-#
+press ok
+wait 400
+press ok
+wait 2600
+shot b1-msg-#
+wait 600
+shot b1-msg-#
+wait 800
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+shot field-after-b1
+hud f6
+wait 800
+shot field-roster
+hud f6
+wait 500
+log ===== 324 Guard Scorpion (boss)
+fieldop 70 00 44 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot boss-go-#
+wait 1200
+shot boss-go-#
+wait 4000
+shot boss-menu-monster
+hud f8
+wait 2500
+shot boss-menu-cloud
+press down
+wait 250
+press down
+wait 250
+shot boss-catch-cursor
+press ok
+wait 400
+press ok
+wait 2600
+shot boss-msg-#
+wait 1000
+shot boss-msg-#
+wait 1000
+shot boss-msg-#
+hud f8
+write32 9AB2A8 1
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 3000
+shot boss-turn-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+shot field-after-boss
+log ===== 500 Bomb
+fieldop 70 00 F4 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 6000
+shot bomb-#
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 3000
+shot bomb-turn-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+shot field-end
+dump DC08B4 4
+quit

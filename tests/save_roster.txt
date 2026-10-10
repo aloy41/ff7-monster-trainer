@@ -1,0 +1,45 @@
+# Save path: New Game with the Mono Drive roster (slot 98) -> open the Save screen (field opcode MENU type 14) ->
+# save to file 1 / slot 1. Expect "SAVE file 0 slot 0 ... roster written" and save\trainer\trainer_slot00.json.
+log save_roster
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 98
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+shot field-before-save
+fieldop 49 00 0E 00
+wait 2500
+shot save-1-files
+press ok
+wait 1500
+shot save-2-slots
+press ok
+wait 1500
+shot save-3-confirm
+press ok
+wait 2500
+shot save-4-done
+press ok
+wait 1500
+press cancel
+wait 1500
+press cancel
+wait 2000
+shot save-5-back
+quit

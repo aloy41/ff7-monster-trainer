@@ -1,0 +1,65 @@
+log VERIFY6 d12_pending_0
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 64
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+fieldop 70 00 4B 00
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+write32 9AB2AC 30000
+write32 9AB2A8 30000
+write32 9AB314 30000
+write32 9AB310 30000
+write32 9AB37C 30000
+write32 9AB378 30000
+write32 9AB3E4 30000
+write32 9AB3E0 30000
+write32 9AB44C 30000
+write32 9AB448 30000
+wait 7000
+shot P-menu
+press ok
+wait 400
+press ok
+wait 400
+press ok
+wait 0
+write32 9AB4B0 0
+log D12 monster HP zeroed 0 ms after the command keys
+wait 8000
+shot P-after
+wait 4000
+shot P-after2
+write32 9AB2A8 1
+write32 9AB310 1
+write32 9AB378 1
+write32 9AB3E0 1
+write32 9AB448 1
+whilemode 2 90000
+press ok
+wait 250
+end
+log D12 battle over
+quitifmode 2
+wait 3000
+shot P-field
+quit

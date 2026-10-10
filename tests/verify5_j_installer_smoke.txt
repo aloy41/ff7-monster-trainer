@@ -1,0 +1,156 @@
+log VERIFY5 J installer_smoke
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+hud f6
+wait 700
+shot j-roster0
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 3000
+write32 9AB108 9999
+wait 2500
+shot j1-menu
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+shot j1-target
+press ok
+wait 1000
+shot j1-msg-#
+wait 700
+shot j1-msg-#
+wait 700
+shot j1-msg-#
+wait 700
+shot j1-msg-#
+wait 700
+shot j1-msg-#
+wait 700
+shot j1-msg-#
+wait 700
+shot j1-msg-#
+wait 700
+shot j1-msg-#
+wait 700
+shot j1-msg-#
+wait 700
+shot j1-msg-#
+wait 700
+write32 9AB108 9999
+wait 2500
+shot j2-menu
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+shot j2-target
+press ok
+wait 1000
+shot j2-msg-#
+wait 700
+shot j2-msg-#
+wait 700
+shot j2-msg-#
+wait 700
+shot j2-msg-#
+wait 700
+shot j2-msg-#
+wait 700
+shot j2-msg-#
+wait 700
+shot j2-msg-#
+wait 700
+shot j2-msg-#
+wait 700
+shot j2-msg-#
+wait 700
+shot j2-msg-#
+wait 700
+write32 9AB2A8 1
+write32 9AB310 1
+whilemode 2 150000
+write32 9AB108 9999
+press ok
+wait 400
+press ok
+wait 2000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot j-roster
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1200
+shot j3-go
+wait 4500
+shot j3-menu
+press ok
+wait 500
+shot j3-moves
+press ok
+wait 500
+shot j3-target
+press ok
+wait 1000
+shot j3-act-#
+wait 1000
+shot j3-act-#
+wait 1000
+shot j3-act-#
+whilemode 2 150000
+write32 9AB108 9999
+press ok
+wait 400
+press ok
+wait 2000
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot j-after
+hud f6
+log --- PASS marker: script end reached
+quit

@@ -1,0 +1,43 @@
+log VERIFY6 load variants (one oddity each on roster 72)
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+core load 30
+wait 1000
+core load 31
+wait 1000
+core load 32
+wait 1000
+core load 33
+wait 1000
+core load 34
+wait 1000
+core load 35
+wait 1000
+core load 36
+wait 1000
+core load 37
+wait 1000
+core load 38
+wait 1000
+core load 39
+wait 1000
+core load 70
+wait 1000
+core load 45
+wait 1000
+core load 93
+wait 1000
+core load 46
+wait 1000
+core load 47
+wait 1000
+log --- PASS marker: script end reached
+quit

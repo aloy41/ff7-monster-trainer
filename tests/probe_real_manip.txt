@@ -1,0 +1,79 @@
+# Phase 3 probe B: perform a REAL Manipulate and snapshot memory before/after, to find the caster->puppet link.
+# Cloud's weapon slot 1 (savemap 0xDBFD38 + 0x54 + 0x40 + 4 = 0xDBFDD0) := Manipulate (id 42).
+log probe_real_manip
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+ffnx skip
+wait 3000
+dump DBFDCC 32
+write32 DBFDD0 42
+dump DBFDCC 32
+wait 12000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 6000
+shot 01-menu
+snap before
+dump 9AB0DC 8
+dump 9AB2E4 8
+dump 9AB27C 8
+# Manip. should sit where Steal did: Down x2, OK, OK on the first MP (actor 4)
+press down
+wait 250
+press down
+wait 250
+shot 02-cursor
+press ok
+wait 500
+shot 03-target
+press ok
+wait 6000
+shot 04-after1
+snap after1
+dump 9AB27C 8
+dump 9AB2E4 8
+wait 6000
+shot 05-next-menu
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 500
+press ok
+wait 6000
+shot 06-after2
+snap after2
+dump 9AB27C 8
+dump 9AB2E4 8
+wait 5000
+shot 07-later
+snap later
+log --- finishing
+whilemode 2 60000
+press cancel
+wait 300
+press ok
+wait 300
+press ok
+wait 2000
+end
+quit

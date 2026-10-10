@@ -1,0 +1,81 @@
+# VERIFY3 run F: core load 87 (6 monsters, Grosspanzer?Small lead). Catch with a full party (F8) -> PC box;
+# then F8 back and battle 300 with Grosspanzer?Small Normal Shell (is the soft-lock the whole Grosspanzer line?).
+log VERIFY3 F fullparty_catch_small
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 87
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 2500
+log ===== Catch with a full party (F8, Cloud's own menu)
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 6000
+hud f8
+wait 2500
+shot k-cloudmenu
+whilemode 2 120000
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 400
+press ok
+wait 1500
+shot k-msg-#
+wait 600
+shot k-msg-#
+wait 600
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+hud f8
+hud f6
+wait 700
+shot k-roster
+hud f6
+log ===== battle 300 lead small_shell
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 6000
+shot small-menu
+press ok
+wait 500
+press ok
+wait 1000
+shot small-act-#
+whilemode 2 60000
+press ok
+wait 400
+press ok
+wait 2500
+shot small-t-#
+end
+log --- battle small left the battle mode
+quit

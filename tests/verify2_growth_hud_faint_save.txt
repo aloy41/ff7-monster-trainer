@@ -1,0 +1,224 @@
+# VERIFY2 run 5: New Game + roster 92 (Hammer Blaster L16 with XP for L22 -> learns 2 moves; Mono Drive L14 ->
+# evolves; Guard Hound L7 -> L8 evolves; Mono Drive knows removed Fire). F5/F6/F7 in the field; Barret joins;
+# battle 300 growth messages; faint flow; inn heal; save to Save 2 / GAME 03; Game Over; Continue Save 1 / GAME 03
+# must restore that save's 2 MPs, not this roster.
+log VERIFY2 growth_hud_faint_save
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 92
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 2500
+shot f-00-lead
+hud f6
+wait 700
+shot f-01-roster
+hud f5
+wait 700
+shot f-02-f5
+hud f7
+wait 700
+shot f-03-f7
+hud f5
+wait 400
+hud f5
+wait 400
+hud f5
+wait 400
+hud f5
+wait 400
+hud f5
+wait 700
+shot f-04-f5x6
+hud f6
+wait 700
+shot f-05-hidden
+log --- Barret joins the field party
+write8 DC0231 1
+dump DC0230 4
+log ===== battle 300 growth
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+dump DC0230 4
+wait 1000
+shot g-go-#
+wait 5000
+shot g-menu
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 1000
+shot g-t-#
+wait 1000
+shot g-t-#
+end
+whilemode 17 40000
+shot g-sp-#
+wait 300
+shot g-sp-#
+wait 300
+shot g-sp-#
+press ok
+wait 600
+end
+waitmode 1 20000
+wait 3000
+log --- back in the field: Barret restored?
+dump DC0230 4
+hud f6
+wait 700
+shot g-roster
+hud f6
+log ===== faint: battle 300, monster at 1 HP, Cloud's own turns (F8)
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 1500
+write32 9AB378 1
+hud f8
+wait 1000
+shot fa-#
+wait 3000
+shot fa-#
+wait 3000
+shot fa-#
+wait 3000
+shot fa-#
+wait 3000
+shot fa-#
+wait 3000
+shot fa-#
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+shot fa-t-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f8
+hud f6
+wait 700
+shot fa-roster
+hud f6
+log ===== inn: fieldop 3E
+fieldop 3E
+wait 1500
+hud f6
+wait 700
+shot inn-roster
+hud f6
+log ===== save to Save 2 / GAME 03
+fieldop 49 00 0E 00
+wait 2500
+press right
+wait 400
+shot s-1-files
+press ok
+wait 1500
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press down
+wait 300
+press down
+wait 400
+shot s-2-slots
+press ok
+wait 1500
+shot s-3
+press ok
+wait 2500
+shot s-4
+whilemode 5 30000
+press cancel
+wait 1500
+end
+waitmode 1 10000
+wait 1500
+shot s-5-field
+log ===== Game Over
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 2000
+write32 9AB108 1
+hud f8
+whilemode 2 120000
+wait 1500
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 1000
+press ok
+wait 2000
+end
+whilemode 27 120000
+press ok
+wait 3000
+end
+waitmode 20 30000
+wait 6000
+log ===== Continue Save 1 / GAME 03 (expect the 2 MPs)
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+shot c-files
+press ok
+wait 2000
+press up
+wait 300
+press up
+wait 300
+press up
+wait 300
+press down
+wait 300
+press down
+wait 400
+shot c-slots
+press ok
+waitmode 1 30000
+wait 3000
+hud f6
+wait 700
+shot c-roster
+hud f6
+quit

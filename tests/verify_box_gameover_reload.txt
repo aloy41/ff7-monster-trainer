@@ -1,0 +1,146 @@
+# VERIFY run 7: Continue Save 2 / GAME 01 (save C, 6 party + 1 box). Battle 300 with Mono Drive out: F8, both MPs
+# at 1 HP, Catch until both caught (party full -> box). Then Game Over (Cloud 1 HP, F8, no input). Title ->
+# Continue Save 1 / GAME 02 (save B, Bomb): roster must be B's; battle 300 with Bomb out, F8 + Catch an MP.
+log VERIFY box_gameover_reload
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press right
+wait 300
+shot t-files
+press ok
+wait 2000
+press up
+wait 400
+shot t-slots
+press ok
+waitmode 1 30000
+wait 3000
+dump DC08B4 4
+log ===== battle 300: F8 catch both MPs into the box
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 2000
+hud f8
+write32 9AB2A8 1
+write32 9AB310 1
+wait 2500
+whilemode 2 90000
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 400
+press ok
+wait 2600
+shot k-msg-#
+wait 1500
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2500
+hud f6
+wait 700
+shot k-roster
+hud f6
+log ===== Game Over
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 2000
+write32 9AB108 1
+hud f8
+whilemode 2 120000
+wait 3000
+end
+whilemode 1 10000
+wait 500
+end
+whilemode 26 30000
+wait 2000
+shot go-over-#
+press ok
+end
+waitmode 20 120000
+wait 4000
+shot go-title
+log ===== Continue Save 1 / GAME 02
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+shot t3-files
+press ok
+wait 2000
+shot t3-slots
+press down
+wait 400
+shot t3-slots2
+press ok
+waitmode 1 30000
+wait 3000
+dump DC08B4 4
+hud f6
+wait 700
+shot t3-roster
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot t3-go
+wait 2000
+hud f8
+write32 9AB2A8 1
+wait 2500
+press down
+wait 250
+press down
+wait 250
+press ok
+wait 400
+press ok
+wait 2600
+shot t3-msg-#
+wait 1500
+shot t3-msg-#
+hud f8
+whilemode 2 90000
+press ok
+wait 400
+press ok
+wait 2500
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+hud f6
+wait 700
+shot t3-end
+quit

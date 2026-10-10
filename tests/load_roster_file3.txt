@@ -1,0 +1,43 @@
+# Load path: Continue -> file 1 / slot 1 (written by tests/save_roster.txt) -> the roster comes back from
+# trainer_slot00.json (no `core load`) -> walk into the first battle -> Mono Drive is sent out.
+log load_roster_file3
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+shot load-0-title
+press ok
+wait 2500
+shot load-1-files
+press right
+wait 300
+press right
+wait 400
+shot load-1b-file3
+press ok
+wait 2000
+shot load-2-slots
+# the slot cursor remembers its last position: force slot 1
+press up
+wait 300
+press up
+wait 300
+press ok
+waitmode 1 30000
+wait 3000
+shot load-3-field
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 3000
+shot load-4-battle
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 3500
+end
+wait 2000
+quit

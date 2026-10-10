@@ -1,0 +1,81 @@
+# Verification #2 fixes: F5 cycles through all 6 party monsters (N1); the HUD widens for long names (N4);
+# a burst of growth messages (reached Lv 22 + learned Zip Hammer + learned Zip Confu) is shown one at a time and
+# the battle waits for them (N2).
+log hud_lead_messages
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 93
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+hud f6
+wait 700
+shot l-roster-0
+hud f5
+wait 300
+hud f5
+wait 300
+hud f5
+wait 300
+hud f5
+wait 300
+hud f5
+wait 300
+hud f5
+wait 700
+shot l-roster-6
+hud f5
+wait 700
+shot l-roster-7
+hud f6
+wait 300
+log --- 6 more presses: back to Hammer Blaster leading
+hud f5
+wait 300
+hud f5
+wait 300
+hud f5
+wait 300
+hud f5
+wait 300
+hud f5
+wait 300
+hud f6
+wait 700
+shot l-roster-12
+hud f6
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 3000
+shot g-menu
+whilemode 2 150000
+press ok
+wait 400
+press ok
+wait 700
+shot g-#
+wait 700
+shot g-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+log --- PASS marker: field after growth burst
+quit

@@ -1,0 +1,71 @@
+{
+ "version": 1,
+ "slot": 72,
+ "roster": {
+  "next_uid": 20,
+  "party": [
+   {
+    "uid": 1,
+    "species": 18,
+    "nickname": "Mono Drive",
+    "level": 14,
+    "xp": 5799,
+    "hp": 300,
+    "mp": 999,
+    "known": [
+     276
+    ],
+    "equipped": [
+     276
+    ],
+    "caught_level": 14,
+    "caught_scene": 0
+   },
+   {
+    "uid": 2,
+    "species": 17,
+    "nickname": "Guard Hound",
+    "level": 7,
+    "xp": 775,
+    "hp": 200,
+    "mp": 999,
+    "known": [
+     274,
+     275
+    ],
+    "equipped": [
+     274,
+     275
+    ],
+    "caught_level": 7,
+    "caught_scene": 0
+   },
+   {
+    "uid": 3,
+    "species": 16,
+    "nickname": "MP",
+    "level": 2,
+    "xp": 9,
+    "hp": 73,
+    "mp": 999,
+    "known": [
+     272,
+     273
+    ],
+    "equipped": [
+     272,
+     273
+    ],
+    "caught_level": 2,
+    "caught_scene": 0
+   }
+  ],
+  "box": [],
+  "trainer": {
+   "captures": 3,
+   "battles": 0,
+   "legendary_unlocked": false,
+   "kit_given": true
+  }
+ }
+}

@@ -1,0 +1,16 @@
+# Focus-free smoke test: credits -> title -> New Game -> opening FMV -> first field, then quit.
+# The credits wait for a key press; the title cursor starts on "Continue?".
+log smoke_newgame
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+shot 01-title
+press up
+wait 500
+press ok
+waitmode 1 300000
+wait 3000
+shot 02-field
+quit

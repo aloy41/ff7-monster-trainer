@@ -1,0 +1,194 @@
+# VERIFY run 2: roster 80 (6 party + 1 box). F5/F6/F7 in the field, Barret joins, boss 324 with Mono Drive out:
+# F8 + Catch on the boss (dense shots), F5 in battle (must do nothing), win -> Mono Drive L15 evolves, Guard Hound
+# half XP -> L8 evolves. Then saves: A = roster 80-grown file1/slot1, B = roster 81 file1/slot2, C = roster 80 fresh file2/slot1.
+log VERIFY grow_hud_save
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 80
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 2500
+shot f-00-lead
+hud f6
+wait 700
+shot f-01-roster
+hud f5
+wait 700
+shot f-02-after-f5
+hud f5
+wait 700
+shot f-03-after-f5b
+hud f7
+wait 700
+shot f-04-after-f7
+hud f6
+wait 700
+shot f-05-hidden
+log --- Barret joins the field party
+write8 DC0231 1
+dump DC0230 4
+log ===== 324 Guard Scorpion (boss)
+fieldop 70 00 44 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+dump DC0230 4
+wait 1000
+shot b-go-#
+wait 5000
+shot b-menu-monster
+hud f5
+hud f7
+wait 300
+hud f8
+wait 2500
+press down
+wait 250
+press down
+wait 250
+shot b-catch-cursor
+press ok
+wait 400
+press ok
+wait 1500
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+wait 300
+shot b-msg-#
+hud f8
+wait 300
+write32 9AB2A8 1
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 700
+shot b-turn-#
+wait 700
+shot b-turn-#
+wait 700
+shot b-turn-#
+wait 700
+shot b-turn-#
+end
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 3000
+log --- back in the field: Barret restored?
+dump DC0230 4
+hud f6
+wait 700
+shot f-10-grown
+hud f6
+log ===== save A: file 1 slot 1
+write32 DC08B4 1111
+fieldop 49 00 0E 00
+wait 2500
+shot sA-1-files
+press ok
+wait 1500
+shot sA-2-slots
+press ok
+wait 1500
+shot sA-3-confirm
+press ok
+wait 2500
+shot sA-4-done
+press ok
+wait 1500
+press cancel
+wait 1500
+press cancel
+wait 2000
+log ===== save B: roster 81, file 1 slot 2
+core load 81
+write32 DC08B4 2222
+fieldop 49 00 0E 00
+wait 2500
+shot sB-1-files
+press ok
+wait 1500
+press down
+wait 400
+shot sB-2-slots
+press ok
+wait 1500
+shot sB-3-confirm
+press ok
+wait 2500
+shot sB-4-done
+press ok
+wait 1500
+press cancel
+wait 1500
+press cancel
+wait 2000
+log ===== save C: roster 80 (fresh), file 2 slot 1
+core load 80
+write32 DC08B4 3333
+fieldop 49 00 0E 00
+wait 2500
+press right
+wait 400
+shot sC-1-files
+press ok
+wait 1500
+press up
+wait 400
+shot sC-2-slots
+press ok
+wait 1500
+shot sC-3-confirm
+press ok
+wait 2500
+shot sC-4-done
+press ok
+wait 1500
+press cancel
+wait 1500
+press cancel
+wait 2000
+shot f-20-end
+quit

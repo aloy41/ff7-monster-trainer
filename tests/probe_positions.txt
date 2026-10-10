@@ -1,0 +1,40 @@
+# Phase 3 probe D: formation placements and live model positions (where is the player side?).
+# placements 0x9A8794 (6 x 16: u16 id, s16 x, y, z, u16 row, u16 cover, u32 flags)
+# battle_model_state 0xBE1178 + i*0x1AEC: rotation +0x15E, position +0x166
+log probe_positions
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+whilemode 1 60000
+hold up 1500
+end
+waitmode 2 20000
+wait 3000
+dump 9A8794 96
+log --- actor 0 (Cloud) model state rot/pos
+dump BE12D6 24
+log --- actor 4
+dump BE7D86 24
+log --- actor 5
+dump BE9872 24
+log --- party battle record around the link byte
+dump 9A8D80 128
+shot 01
+quit

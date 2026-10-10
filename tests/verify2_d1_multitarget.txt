@@ -1,0 +1,283 @@
+# VERIFY2 run 4: D1 + D4. Continue Save 1 / GAME 01 (save A), then core load 91 (= save A's own roster: Scrutin Eye
+# with the removed Fire/Ice2/Fire2 equipped). Battle 300, OK spam to the end. Then core load 90: six monsters whose
+# first move is a multi-target monster skill (Big Sound, Dance, Flame Dance) or toggle-target (Knife, goes nuts, Bite);
+# battle 300 with each lead (F5 between), OK spam until the battle ends.
+log VERIFY2 d1_multitarget
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press ok
+wait 2500
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press left
+wait 300
+press ok
+wait 2000
+press up
+wait 400
+press ok
+waitmode 1 30000
+wait 3000
+core load 91
+wait 500
+hud f6
+wait 700
+shot a-roster
+hud f6
+log ===== battle 300 lead scrutin
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot scrutin-go
+wait 4500
+shot scrutin-menu
+press ok
+wait 500
+shot scrutin-target
+press ok
+wait 1200
+shot scrutin-act-#
+wait 1200
+shot scrutin-act-#
+wait 1200
+shot scrutin-act-#
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+shot scrutin-#
+end
+log --- battle scrutin left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot scrutin-field
+core load 90
+wait 500
+hud f6
+wait 700
+shot b-roster
+hud f6
+log ===== battle 300 lead tonadu
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot tonadu-go
+wait 4500
+shot tonadu-menu
+press ok
+wait 500
+shot tonadu-target
+press ok
+wait 1200
+shot tonadu-act-#
+wait 1200
+shot tonadu-act-#
+wait 1200
+shot tonadu-act-#
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+shot tonadu-#
+end
+log --- battle tonadu left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot tonadu-field
+hud f5
+wait 800
+shot lead-malldancer
+log ===== battle 300 lead malldancer
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot malldancer-go
+wait 4500
+shot malldancer-menu
+press ok
+wait 500
+shot malldancer-target
+press ok
+wait 1200
+shot malldancer-act-#
+wait 1200
+shot malldancer-act-#
+wait 1200
+shot malldancer-act-#
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+shot malldancer-#
+end
+log --- battle malldancer left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot malldancer-field
+hud f5
+wait 800
+shot lead-foulander
+log ===== battle 300 lead foulander
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot foulander-go
+wait 4500
+shot foulander-menu
+press ok
+wait 500
+shot foulander-target
+press ok
+wait 1200
+shot foulander-act-#
+wait 1200
+shot foulander-act-#
+wait 1200
+shot foulander-act-#
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+shot foulander-#
+end
+log --- battle foulander left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot foulander-field
+hud f5
+wait 800
+shot lead-tonberry
+log ===== battle 300 lead tonberry
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot tonberry-go
+wait 4500
+shot tonberry-menu
+press ok
+wait 500
+shot tonberry-target
+press ok
+wait 1200
+shot tonberry-act-#
+wait 1200
+shot tonberry-act-#
+wait 1200
+shot tonberry-act-#
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+shot tonberry-#
+end
+log --- battle tonberry left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot tonberry-field
+hud f5
+wait 800
+shot lead-chocobo
+log ===== battle 300 lead chocobo
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot chocobo-go
+wait 4500
+shot chocobo-menu
+press ok
+wait 500
+shot chocobo-target
+press ok
+wait 1200
+shot chocobo-act-#
+wait 1200
+shot chocobo-act-#
+wait 1200
+shot chocobo-act-#
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+shot chocobo-#
+end
+log --- battle chocobo left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot chocobo-field
+hud f5
+wait 800
+shot lead-beachplug
+log ===== battle 300 lead beachplug
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 1500
+shot beachplug-go
+wait 4500
+shot beachplug-menu
+press ok
+wait 500
+shot beachplug-target
+press ok
+wait 1200
+shot beachplug-act-#
+wait 1200
+shot beachplug-act-#
+wait 1200
+shot beachplug-act-#
+whilemode 2 120000
+press ok
+wait 400
+press ok
+wait 2500
+shot beachplug-#
+end
+log --- battle beachplug left the battle mode
+whilemode 17 40000
+press ok
+wait 900
+end
+waitmode 1 20000
+wait 2000
+shot beachplug-field
+hud f6
+wait 700
+shot z-roster
+hud f6
+quit

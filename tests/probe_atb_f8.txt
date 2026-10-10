@@ -1,0 +1,102 @@
+log PROBE atb scan f8
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 95
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+wait 6000
+shot E-menu
+press ok
+wait 500
+press ok
+wait 500
+press ok
+wait 1500
+hud f8
+log PROBE t0
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t1
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t2
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t3
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t4
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t5
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t6
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t7
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t8
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t9
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t10
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t11
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t12
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t13
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t14
+dump 9A8000 16384
+shot P-#
+wait 700
+log PROBE t15
+dump 9A8000 16384
+shot P-#
+wait 700
+quit
