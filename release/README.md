@@ -1,7 +1,8 @@
 # FINAL FANTASY VII: Monster Trainer
 
 Cloud is a trainer. Every regular enemy in FF7 can be caught, raised, and sent into battle, where it fights with its
-own moves, model, and animations while Cloud commands it. Barret, Tifa and the rest stay in the story but never fight.
+own moves, model, and animations. Up to two monsters fight beside Cloud, each with its own row (HP, MP, TIME) and its
+own turns. Barret, Tifa and the rest stay in the story but never fight.
 
 ## Install
 
@@ -19,23 +20,24 @@ To uninstall, delete the FF7 Monster Trainer folder and the shortcut.
 | | |
 |---|---|
 | **Catch** | Cloud gets the **Catch** materia once per game (it takes Ice's slot; Ice moves to your materia list). In battle, choose **Catch** on an enemy. Catch never steals items. Weakened monsters are easier: at full HP a low-level monster is about 30%, at low HP about 3 times that. Sleep, Stop or Paralysis help more. Bosses can't be caught, and neither can Eye, Yang and Grosspanzer·Mobile (their moves can't be used by a monster fighting for Cloud). |
-| **Your monster fights** | The lead monster is sent out automatically ("Go, Mono Drive!"). On Cloud's turn you choose the monster's move (up to 3). Every move hits one enemy, even moves that hit a whole group in the original game. Enemies attack it too. |
-| **F8** | Switch Cloud's turn between **commanding the monster** and **Cloud's own menu** (Catch, items, Defend). Pressed while a command is still playing out, it takes effect right after. |
-| **F5** | Next lead monster (outside battle). |
+| **Your monsters fight** | The first two conscious monsters in your party are sent out automatically ("Go, Mono Drive!"). Each has its own party row with HP, MP and a TIME bar, and on its turn you pick one of its moves (up to 3). Every move hits one enemy, even moves that hit a whole group in the original game. Enemies attack them too. Cloud keeps his own menu (Attack, Magic, Catch, Item) on his turns. |
+| **Monsters page** | Main menu → **Monsters** (where PHS was). See every monster's type, weaknesses, HP, MP, EXP, stats, moves, next move and evolution. **OK** on a monster picks it up, **OK** again puts it in a new place (reorder the party, or trade with the PC box: the first two fight). **Triangle** opens its moves: choose which known moves it uses in battle. Works with keyboard and controller. |
+| **F5** | Next lead monster (outside battle). Also on the Monsters page. |
 | **F6** | Show or hide the roster panel. |
 | **F7** | Swap the last party monster with the next one in the PC box (outside battle). |
-| **HUD** | Top right in battle: the monster's level and HP. Bottom right in the field: your lead monster (F6 for the full party). |
+| **HUD** | Bottom right in the field: your lead monster (F6 for the full party). In battle it only appears to say why no monster is out. |
 
 - **Party:** up to 6 monsters; more go to the PC box.
-- **Growing:** the monster that fought gets the battle's EXP and the rest of the party half. Monsters learn their
+- **Growing:** the monsters that fought get the battle's EXP and the rest of the party half. Monsters learn their
   species' moves as they level and some evolve (Mono Drive becomes Scrutin Eye at Lv 15, Guard Hound becomes Blood
   Taste, and so on).
 - **Healing:** saving the game, or resting at an inn or a bed, heals every monster, fainted ones included.
-- **Fainting:** a monster at 0 HP faints and Cloud fights on alone; the next conscious monster leads the next
-  battle.
-- **If Cloud falls, it's Game Over,** even if the monster still stands. Keep Cloud alive (Defend, Potions).
+- **Fainting:** a monster at 0 HP faints (its row goes down) and the others fight on; the next conscious monsters
+  fight in the next battle.
+- **Game Over** only when Cloud and every monster out are down. If Cloud falls, his monsters can still win the
+  battle for him.
 - **No room:** a few battles have no space for another monster (all six spots, or all three enemy kinds, are
-  taken). Cloud fights alone there ("... can't join this battle!").
+  taken). That monster sits the battle out ("... can't join this battle!").
 - **Saves:** your monsters are saved together with each game save (`save\trainer\trainer_slotNN.json` next to
   the game's own saves) and come back when you load that save.
 - The HUD hotkeys only react while the game window is active.

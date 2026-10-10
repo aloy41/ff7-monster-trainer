@@ -1,0 +1,45 @@
+log stand_in2
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 64
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+companions on
+write8 DC0231 1
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 300
+write32 9AB10C 9999
+write32 9AB108 9999
+write32 9AB174 9999
+write32 9AB170 9999
+wait 3000
+shot S-start
+hud f8
+write16 BFD0A6 0x8AD0
+write16 BE2DCA 0x8AD0
+write16 9AB0B8 0x41
+wait 1500
+shot S-hidden
+write8 9A8DF2 6
+whilemode 2 40000
+write16 9AB0B8 0x41
+press ok
+wait 600
+shot S-#
+end
+quit

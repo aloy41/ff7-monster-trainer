@@ -21,5 +21,7 @@ bool trainer_turns();
 extern volatile bool test_sweep;
 // Test mode only: force the next battles' layout (-1 = as the formation says).
 extern volatile int test_layout;
+// Test mode only: companions stay in the battle party (experiments).
+extern volatile bool test_keep_companions;
 
 }  // namespace trainer

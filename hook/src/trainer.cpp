@@ -15,6 +15,7 @@ const char* BUILD = "phase3-sendout " __DATE__ " " __TIME__;
 TrApi api = {};
 bool core_ready = false;
 volatile int test_layout = -1;
+volatile bool test_keep_companions = false;
 volatile bool test_sweep = false;
 
 namespace {
@@ -34,37 +35,80 @@ void core_error(const char* what) {
     tlog("core: %s failed: %s", what, buf);
 }
 
-// ---- send-out: the lead monster fights on Cloud's side as a manipulated actor ------------------------------
+// ---- the team: up to two monsters fight beside Cloud, each in its own party row ---------------------------------
+// A monster is an enemy-side actor driven through Manipulate (its own model, moves and animations) standing at a
+// party member's spot. Its party row belongs to a stand-in: Barret's or Tifa's battle slot, renamed and given the
+// monster's level, HP, MP and speed. The stand-in is out of sight and can't be targeted; on its turn its menu is the
+// monster's moves (its link byte points at the monster), and its row mirrors the monster's HP and MP. Cloud keeps
+// his own menu (Catch) all the time.
 
-struct Puppet {
-    bool planned = false;    // placement written at scene load
-    bool live = false;       // stats/manipulation applied, still standing
-    int actor = -1;          // enemy actor index 4..9
+constexpr int TEAM = 2;
+constexpr uint8_t STANDIN_CHAR[TEAM] = {1, 2};  // Barret and Tifa's records, in party slots 1 and 2
+constexpr int16_t OUT_OF_SIGHT = -30000;        // where a stand-in waits (x and z), far outside every camera
+constexpr uint32_t TARGETABLE = 0x08;           // ActorVars state flag (party 0x08, enemies 0x9D): can be targeted
+
+struct Fighter {
+    bool standin = false;    // a party slot is dressed for this monster (battle party build)
+    bool planned = false;    // its actor is placed in the scene (scene load)
+    bool live = false;       // stats and link applied, still standing
+    int slot = -1;           // party slot 1..2 (the stand-in)
+    int actor = -1;          // enemy actor 4..9 (the monster)
     uint32_t uid = 0;
     uint16_t species = 0;
     char name[32] = {};
-    int cleared_ticks = -1;  // battle frames since the wild side was cleared (-1 = not yet)
-    uint16_t moves[3] = {0xFFFF, 0xFFFF, 0xFFFF};  // what Cloud's Manipulate menu offers
+    uint16_t moves[3] = {0xFFFF, 0xFFFF, 0xFFFF};  // what its menu offers
+    int16_t spot[3] = {};    // the stand-in's party spot: where the monster stands
+    bool spot_known = false;
+    bool face_pending = false;
+    bool done = false;       // left this battle (fainted, recalled, or couldn't join)
+    bool fallen = false;     // fainted: its death gets checked FALLEN_GRACE_MS later (settle_fallen)
+    DWORD fallen_at = 0;
     int sweep_used = 0;      // test_sweep: moves forced so far
     int sweep_finish = 0;    // test_sweep: turns since every forced move played out
 };
-Puppet g_puppet;
-char g_battle_start_message[64] = {};  // shown on the first battle frame (scene load runs before the battle starts)
-volatile bool g_trainer_turns = false;  // F8: Cloud acts himself (Catch!) while the monster waits
-// Cloud's command is waiting to play out: the link it was given with stays until then. The engine ends a turn
-// through the link, so switching it under a pending action left Cloud's ATB full forever with no menu (F8 soft-lock).
-bool g_cloud_action_pending = false;
-// Cloud's command to the monster was still queued when it fainted: the engine drops that action, and Cloud's TIME bar
-// stays full with no menu for the rest of the battle (D12). Measured: it sometimes recovers on its own (~9 s), often
-// never. settle_fallen_monster restarts his ATB after FALLEN_GRACE_MS.
-bool g_orphaned = false;
-bool g_face_pending = false;  // the monster takes Cloud's facing once his model has one (face_like_cloud)
-int g_fallen_actor = -1;  // the fainted monster, until settle_fallen_monster has checked its death
-DWORD g_fallen_at = 0;
+Fighter g_team[TEAM];
+int g_cleared_ticks = -1;  // battle frames since the wild side was cleared (-1 = not yet)
+char g_battle_start_message[2][64] = {};  // shown on the first battle frame (scene load runs before the battle starts)
 constexpr DWORD FALLEN_GRACE_MS = 3000;
-uint8_t g_held_link = 0;
-constexpr int16_t SENDOUT_X = -600, SENDOUT_Z = 1100;  // in front of Cloud (party side is +z)
+constexpr int16_t SENDOUT_X = -600, SENDOUT_Z = 1100;  // scene placement only; its real spot is set with the homes
 constexpr int RECALL_DELAY_TICKS = 120;  // ~2 s of battle frames between "wild side cleared" and the recall
+
+Fighter* fighter_of_actor(int actor) {
+    for (Fighter& f : g_team)
+        if ((f.planned || f.live) && f.actor == actor) return &f;
+    return nullptr;
+}
+
+Fighter* fighter_of_slot(int slot) {
+    for (Fighter& f : g_team)
+        if (f.standin && f.slot == slot) return &f;
+    return nullptr;
+}
+
+// Whose monster move is being chosen or was just issued? The battle menu's party-slot variable stays 0 for a
+// stand-in's monster menu (measured), so go by the move: the issued action of a monster move is its slot in the
+// scene's attack table, and each monster's moves were installed there for it.
+Fighter* fighter_of_move(uint16_t attack_slot) {
+    if (attack_slot >= ff7::SCENE_ATTACK_SLOTS) return nullptr;
+    const uint16_t id = ff7::scene_attack_ids()[attack_slot];
+    for (Fighter& f : g_team)
+        if (f.live)
+            for (uint16_t m : f.moves)
+                if (m == id && id != 0xFFFF) return &f;
+    return nullptr;
+}
+
+bool any_live() {
+    for (const Fighter& f : g_team)
+        if (f.live) return true;
+    return false;
+}
+
+bool find_party_uid(uint32_t uid, TrMonsterView* out) {
+    for (int i = 0; i < api.party_len(); i++)
+        if (api.party_get(uint32_t(i), out) >= 0 && out->uid == uid) return true;
+    return false;
+}
 
 // Make `species` available in the loaded scene. Returns its enemy-type slot (0-2), or -1.
 // Uses a free type slot, or one the chosen formation doesn't place (scene types are shared by its 4 formations).
@@ -133,118 +177,113 @@ void install_moves(const TrMonsterView& v, int type_slot) {
     }
 }
 
-void plan_send_out() {
-    g_puppet = Puppet{};
-    g_trainer_turns = false;
-    g_cloud_action_pending = false;
-    g_face_pending = false;
-    g_orphaned = false;
-    g_fallen_actor = -1;
-    g_battle_start_message[0] = 0;
-    hud::set_battle_monster(false, "", 0, 0, 0);
-    if (!core_ready) return;
-    int32_t act[2] = {-1, -1};
-    if (api.active(act) <= 0 || act[0] < 0) {
-        tlog("SENDOUT none: no conscious monster in the party");
-        return;
-    }
-    TrMonsterView v;
-    if (api.party_get(uint32_t(act[0]), &v) < 0) return;
+void plan_fighter(Fighter& f, const TrMonsterView& v, int& msg) {
+    auto cant_join = [&] {
+        if (msg < 2) sprintf_s(g_battle_start_message[msg++], "%s can't join this battle!", v.name);
+    };
     int free_place = -1;
     for (int k = 0; k < 6 && free_place < 0; k++)
         if (ff7::placement(k)->enemy_id == 0xFFFF) free_place = k;
     if (free_place < 0) {
-        tlog("SENDOUT no free placement (formation uses all 6): Cloud fights alone");
-        sprintf_s(g_battle_start_message, "%s can't join this battle!", v.name);
-        return;
+        tlog("SENDOUT %s: no free placement (formation uses all 6)", v.name);
+        return cant_join();
     }
     const int type_slot = ensure_species_loaded(v);
-    if (type_slot < 0) {
-        sprintf_s(g_battle_start_message, "%s can't join this battle!", v.name);
-        return;
-    }
+    if (type_slot < 0) return cant_join();
     install_moves(v, type_slot);
     // Row and flags come from a real placement of this formation (placement 0 may be empty).
     const ff7::Placement* ref = nullptr;
     for (int k = 0; k < 6 && !ref; k++)
-        if (ff7::placement(k)->enemy_id != 0xFFFF) ref = ff7::placement(k);
+        if (ff7::placement(k)->enemy_id != 0xFFFF && !fighter_of_actor(4 + k)) ref = ff7::placement(k);
     const uint16_t row = ref ? ref->row : 1;
     const uint32_t flags = ref ? ref->flags : 0x9D;
-    for (int k = free_place; k < 6; k++) {
-        ff7::Placement* p = ff7::placement(k);
-        if (p->enemy_id != 0xFFFF) continue;
-        *p = ff7::Placement{v.species, SENDOUT_X, 0, SENDOUT_Z, row, 0, flags};
-        g_puppet.planned = true;
-        g_puppet.actor = 4 + k;
-        // Forget whatever an earlier battle left in this actor, so apply_send_out only fires once it is rebuilt.
-        ff7::actor(g_puppet.actor)->max_hp = 0;
-        ff7::actor(g_puppet.actor)->formation_id = 0xFFFF;
-        g_puppet.uid = v.uid;
-        g_puppet.species = v.species;
-        strncpy_s(g_puppet.name, v.name, _TRUNCATE);
-        memcpy(g_puppet.moves, ff7::scene_enemy(type_slot)->manip_ids, sizeof g_puppet.moves);
-        tlog("SENDOUT plan: %s L%u (uid %u) -> placement %d / actor %d at (%d, 0, %d)", v.name, v.level, v.uid, k,
-             g_puppet.actor, SENDOUT_X, SENDOUT_Z);
-        return;
+    *ff7::placement(free_place) = ff7::Placement{v.species, SENDOUT_X, 0, SENDOUT_Z, row, 0, flags};
+    f.planned = true;
+    f.actor = 4 + free_place;
+    // Forget whatever an earlier battle left in this actor, so apply_fighter only fires once it is rebuilt.
+    ff7::actor(f.actor)->max_hp = 0;
+    ff7::actor(f.actor)->formation_id = 0xFFFF;
+    memcpy(f.moves, ff7::scene_enemy(type_slot)->manip_ids, sizeof f.moves);
+    tlog("SENDOUT plan: %s L%u (uid %u) -> placement %d / actor %d, party slot %d", v.name, v.level, v.uid, free_place,
+         f.actor, f.slot);
+}
+
+// Scene load (after the battle party was built): place each dressed monster in the scene.
+void plan_send_out() {
+    g_cleared_ticks = -1;
+    g_battle_start_message[0][0] = g_battle_start_message[1][0] = 0;
+    hud::set_battle_monster(false, "", 0, 0, 0);
+    if (!core_ready) return;
+    int msg = 0;
+    for (Fighter& f : g_team) {
+        if (!f.standin) continue;
+        TrMonsterView v;
+        if (!find_party_uid(f.uid, &v)) continue;
+        plan_fighter(f, v, msg);
     }
-    tlog("SENDOUT no free placement (formation uses all 6)");
 }
 
-// The monster stands with Cloud, whatever the layout: its home spot (where it walks back to after acting) is set
-// beside Cloud's, in his row, and it faces the way he does. The formation placement only got it into
-// the scene; in a back or pincer attack that spot is among the enemies. The engine computes the party's homes
-// (0x42AE73) and the enemies' (0x42B8D2) at battle start; this runs after each, so whichever comes last, it wins.
+// The engine computes the party's homes (0x42AE73) and the enemies' (0x42B8D2) at battle start; this runs after
+// each, so whichever comes last, it wins. Each monster takes its stand-in's party spot (so it stands in Cloud's row
+// in every layout, back and pincer attacks included), and the stand-in goes out of sight.
 void __cdecl after_homes_set(uint32_t) {
-    if (!(g_puppet.planned || g_puppet.live) || g_puppet.actor < 4) return;
-    const int16_t* cloud = ff7::home_position(0);
-    int16_t* home = ff7::home_position(g_puppet.actor);
-    home[0] = int16_t(cloud[0] + (cloud[0] > 0 ? -900 : 900));
-    home[1] = cloud[1];
-    home[2] = cloud[2];  // in his row, like a party member (a step toward the enemies is among them in a back attack)
-    int16_t* pos = ff7::model_position(g_puppet.actor);
-    for (int i = 0; i < 3; i++) pos[i] = home[i];
-    g_face_pending = true;
-    tlog("SENDOUT layout %u: Cloud home (%d, %d, %d) -> %s home (%d, %d, %d)", ff7::battle_layout(), cloud[0], cloud[1],
-         cloud[2], g_puppet.name, home[0], home[1], home[2]);
+    for (Fighter& f : g_team) {
+        if (!f.standin) continue;
+        int16_t* stand = ff7::home_position(f.slot);
+        if (stand[0] != OUT_OF_SIGHT) {
+            memcpy(f.spot, stand, sizeof f.spot);
+            f.spot_known = true;
+        }
+        if (f.spot_known && (f.planned || f.live) && f.actor >= 4) {
+            int16_t* home = ff7::home_position(f.actor);
+            int16_t* pos = ff7::model_position(f.actor);
+            for (int i = 0; i < 3; i++) home[i] = pos[i] = f.spot[i];
+            f.face_pending = true;
+        }
+        stand[0] = stand[2] = OUT_OF_SIGHT;
+        int16_t* spos = ff7::model_position(f.slot);
+        spos[0] = spos[2] = OUT_OF_SIGHT;
+        tlog("SENDOUT layout %u: party slot %d spot (%d, %d, %d) -> %s; stand-in out of sight", ff7::battle_layout(),
+             f.slot, f.spot[0], f.spot[1], f.spot[2], f.name);
+    }
 }
 
-// Target selection for a monster move starts on Cloud (the menu sees the move from the puppet's seat, where the
-// "other side" is Cloud's). A monster move only ever hits a wild enemy (before_dispatch), so whenever its cursor is on
-// the party side it goes to the first living wild enemy instead. 0xDC3C70 = the command being targeted (0x20 =
-// monster move); the cursor's actor is at 0xDC3C94, mirrored at 0xDC3C9C (measured: writing both moves the hand).
+// Target selection for a monster move starts on the party side (the menu sees the move from the monster's seat,
+// where the "other side" is ours). A monster move only ever hits a wild enemy (before_dispatch), so whenever its
+// cursor is on the party side it goes to the first living wild enemy instead. 0xDC3C70 = the command being targeted
+// (0x20 = monster move); the cursor's actor is at 0xDC3C94, mirrored at 0xDC3C9C (measured: writing both moves the
+// hand and the hit).
 int first_living_wild();
 
 void aim_at_wild_enemies() {
-    if (!g_puppet.live || g_trainer_turns || ff7::menu_party_slot() != 0) return;
     if (ff7::issued_command() != ff7::CMD_ENEMY_ATTACK || ff7::issued_target_index() >= 4) return;
+    if (!fighter_of_move(ff7::issued_action())) return;
     const int t = first_living_wild();
     if (t < 0) return;
     *reinterpret_cast<volatile uint8_t*>(0xDC3C94) = uint8_t(t);
     *reinterpret_cast<volatile uint8_t*>(0xDC3C9C) = uint8_t(t);
 }
 
-// Battle tick: once Cloud's model has its facing, the monster takes the same one (also as the facing it returns to).
-void face_like_cloud() {
-    if (!g_face_pending || !g_puppet.live) return;
+// Battle tick: once Cloud's model has its facing, each monster takes the same one (also as the facing it returns to).
+void face_like_cloud(Fighter& f) {
+    if (!f.face_pending || !f.live) return;
     const uint16_t* r = ff7::model_initial_rotation(0);
     if (!r[0] && !r[1] && !r[2] && !ff7::model_rotation(0)[1]) return;  // not set up yet
     for (int i = 0; i < 3; i++) {
-        ff7::model_rotation(g_puppet.actor)[i] = ff7::model_rotation(0)[i];
-        ff7::model_initial_rotation(g_puppet.actor)[i] = r[i];
+        ff7::model_rotation(f.actor)[i] = ff7::model_rotation(0)[i];
+        ff7::model_initial_rotation(f.actor)[i] = r[i];
     }
-    g_face_pending = false;
-    tlog("SENDOUT %s faces like Cloud (rot %u)", g_puppet.name, ff7::model_rotation(0)[1]);
+    f.face_pending = false;
 }
 
-// Runs on the monitor thread once the battle's actors exist.
-void apply_send_out() {
-    if (!g_puppet.planned || g_puppet.live) return;
-    ff7::ActorVars* a = ff7::actor(g_puppet.actor);
-    if (a->max_hp <= 0 || a->formation_id != g_puppet.species) return;  // not built yet
+// Battle tick, once the battle's actors exist: the monster gets its stats, its stand-in the link.
+void apply_fighter(Fighter& f) {
+    if (!f.planned || f.live) return;
+    ff7::ActorVars* a = ff7::actor(f.actor);
+    ff7::ActorVars* s = ff7::actor(f.slot);
+    if (a->max_hp <= 0 || a->formation_id != f.species || s->max_hp <= 0) return;  // not built yet
     TrMonsterView v;
-    int32_t act[2] = {-1, -1};
-    api.active(act);
-    if (act[0] < 0 || api.party_get(uint32_t(act[0]), &v) < 0 || v.uid != g_puppet.uid) return;
+    if (!find_party_uid(f.uid, &v)) return;
     a->level = v.level;
     a->max_hp = v.hp_max;
     a->current_hp = v.hp;
@@ -260,23 +299,36 @@ void apply_send_out() {
     a->gil_value = 0;
     a->ap_value = 0;
     a->status |= ff7::ST_MANIPULATE;
-    ff7::cloud_manip_target() = uint8_t(g_puppet.actor);
-    const uint16_t bit = uint16_t(1u << g_puppet.actor);
+    const uint16_t bit = uint16_t(1u << f.actor);
     ff7::party_actors_mask() |= bit;
     ff7::enemy_actors_mask() &= uint16_t(~bit);
-    g_puppet.planned = false;
-    g_puppet.live = true;
-    hud::set_battle_monster(true, v.name, v.level, a->current_hp, a->max_hp);
+    ff7::manip_link(f.slot) = uint8_t(f.actor);
+    s->state_flags &= ~TARGETABLE;
+    s->dexterity = v.stats[4];  // its TIME bar runs at the monster's speed
+    f.planned = false;
+    f.live = true;
     char go[48];
     sprintf_s(go, "Go, %s!", v.name);
     text::show_battle_message(go);
-    tlog("SENDOUT go: %s! actor[%d] L%u HP %d/%d MP %u/%u str %u def %u mag %u spd %u; Cloud commands it", v.name,
-         g_puppet.actor, a->level, a->current_hp, a->max_hp, a->current_mp, a->max_mp, a->phys_atk, a->defense,
-         a->mag_atk, a->dexterity);
+    tlog("SENDOUT go: %s! actor[%d] in party slot %d, L%u HP %d/%d MP %u/%u str %u def %u mag %u spd %u", v.name, f.actor,
+         f.slot, a->level, a->current_hp, a->max_hp, a->current_mp, a->max_mp, a->phys_atk, a->defense, a->mag_atk,
+         a->dexterity);
+}
+
+// A dressed stand-in whose monster couldn't join (no room in this battle): out of the fight, row down.
+void bench_standin(Fighter& f) {
+    if (!f.standin || f.planned || f.live || f.done) return;
+    ff7::ActorVars* s = ff7::actor(f.slot);
+    if (s->max_hp <= 0) return;
+    s->current_hp = 0;
+    s->status |= ff7::ST_DEATH;
+    s->state_flags &= ~TARGETABLE;
+    f.done = true;
+    f.actor = -1;
 }
 
 bool is_wild_enemy(int i) {
-    return i >= 4 && i <= 9 && i != g_puppet.actor && ff7::actor(i)->max_hp > 0;
+    return i >= 4 && i <= 9 && !fighter_of_actor(i) && ff7::actor(i)->max_hp > 0;
 }
 
 int first_living_wild() {
@@ -309,85 +361,91 @@ const char* before_name(const PartyNames& p, uint32_t uid) {
     return "?";
 }
 
-bool find_party_uid(uint32_t uid, TrMonsterView* out) {
-    for (int i = 0; i < api.party_len(); i++)
-        if (api.party_get(uint32_t(i), out) >= 0 && out->uid == uid) return true;
-    return false;
+void fighter_fainted(Fighter& f) {
+    ff7::ActorVars* a = ff7::actor(f.actor);
+    ff7::ActorVars* s = ff7::actor(f.slot);
+    api.set_vitals(f.uid, 0, a->current_mp);
+    ff7::manip_link(f.slot) = 0;
+    s->current_hp = 0;
+    s->status |= ff7::ST_DEATH;  // its row goes down with it, and its TIME bar stops
+    f.live = false;
+    f.done = true;
+    f.fallen = true;
+    f.fallen_at = GetTickCount();
+    tlog("SENDOUT %s fainted! (actor[%d], party slot %d)", f.name, f.actor, f.slot);
+    char msg[48];
+    sprintf_s(msg, "%s fainted!", f.name);
+    text::show_battle_message(msg);
 }
 
-// Wild side cleared, or our monster went down: write its HP/MP back to the roster.
-void puppet_watch() {
-    if (!g_puppet.live) return;
-    ff7::ActorVars* a = ff7::actor(g_puppet.actor);
-    hud::set_battle_monster(true, g_puppet.name, a->level, a->current_hp, a->max_hp);
-    if (a->current_hp <= 0) {
-        api.set_vitals(g_puppet.uid, 0, a->current_mp);
-        ff7::cloud_manip_target() = 0;
-        g_puppet.live = false;
-        g_orphaned = g_cloud_action_pending && g_held_link == uint8_t(g_puppet.actor) && ff7::cloud_atb() == 0xFFFF;
-        g_fallen_actor = g_puppet.actor;
-        g_fallen_at = GetTickCount();
-        g_cloud_action_pending = false;
-        tlog("SENDOUT %s fainted! (actor[%d])%s", g_puppet.name, g_puppet.actor,
-             g_orphaned ? "; Cloud's command to it was still pending" : "");
-        char msg[48];
-        sprintf_s(msg, "%s fainted!", g_puppet.name);
-        text::show_battle_message(msg);
-        return;
-    }
-    // The engine drops the manipulation after the monster's turn once it sits on the party side; keep the trainer link
-    // (status, Cloud's link byte, side masks) asserted for as long as the monster is out.
-    const uint16_t bit = uint16_t(1u << g_puppet.actor);
-    if (g_cloud_action_pending && ff7::cloud_atb() != 0xFFFF) {
-        g_cloud_action_pending = false;  // his action played out: an F8 pressed meanwhile applies now
-        tlog("SENDOUT Cloud's action played out (ATB %04X); link follows F8 again", ff7::cloud_atb());
-    }
-    const uint8_t want_link = g_cloud_action_pending ? g_held_link : g_trainer_turns ? 0 : uint8_t(g_puppet.actor);
-    const bool lost = !(a->status & ff7::ST_MANIPULATE) || ff7::cloud_manip_target() != want_link ||
+// Every battle frame, for each monster that is out.
+void watch_fighter(Fighter& f) {
+    if (!f.live) return;
+    ff7::ActorVars* a = ff7::actor(f.actor);
+    ff7::ActorVars* s = ff7::actor(f.slot);
+    if (a->current_hp <= 0) return fighter_fainted(f);
+    // The stand-in's row shows the monster. Anything that reached the stand-in itself (an attack on the whole party)
+    // must not take its turns away: no death, sleep or stop for it while its monster stands.
+    s->status = 0;
+    s->current_hp = a->current_hp;
+    s->max_hp = a->max_hp;
+    s->current_mp = a->current_mp;
+    s->max_mp = a->max_mp;
+    s->state_flags &= ~TARGETABLE;
+    // The engine drops the manipulation after the monster's turn once it sits on the party side; keep the link
+    // (status, the stand-in's link byte, side masks) asserted for as long as the monster is out.
+    const uint16_t bit = uint16_t(1u << f.actor);
+    const bool lost = !(a->status & ff7::ST_MANIPULATE) || ff7::manip_link(f.slot) != uint8_t(f.actor) ||
                       !(ff7::party_actors_mask() & bit) || (ff7::enemy_actors_mask() & bit);
     if (lost) {
-        static DWORD last_note = 0;
-        if (GetTickCount() - last_note > 2000) {
-            tlog("SENDOUT re-link: status %08X link %u party %04X enemy %04X", a->status, ff7::cloud_manip_target(),
-                 ff7::party_actors_mask(), ff7::enemy_actors_mask());
-            last_note = GetTickCount();
-        }
         a->status |= ff7::ST_MANIPULATE;
-        ff7::cloud_manip_target() = want_link;
+        ff7::manip_link(f.slot) = uint8_t(f.actor);
         ff7::party_actors_mask() |= bit;
         ff7::enemy_actors_mask() &= uint16_t(~bit);
     }
-    if (test_sweep && g_puppet.cleared_ticks < 0) {
+    if (test_sweep && &f == &g_team[0] && g_cleared_ticks < 0) {
         // Nobody falls until every forced move has played out (a move that hangs never gets the monster another turn;
         // before_dispatch then downs the wild side, so moves that deal no damage end too).
         for (int i = 4; i <= 9; i++) {
             ff7::ActorVars* w = ff7::actor(i);
             if (!is_wild_enemy(i) || w->current_hp <= 0 || (w->status & ff7::ST_DEATH)) continue;
-            if (!g_puppet.sweep_finish) w->current_hp = w->max_hp = 30000;
+            if (!f.sweep_finish) w->current_hp = w->max_hp = 30000;
         }
-        if (!g_puppet.sweep_finish) {
+        if (!f.sweep_finish) {
             a->current_hp = a->max_hp;
             ff7::actor(0)->current_hp = ff7::actor(0)->max_hp;
         }
     }
-    if (g_puppet.cleared_ticks >= 0) {
-        // Recall only once the last action has fully played out: killing the actor while an action that involves it
+}
+
+// Wild side cleared: EXP for the roster, growth messages, then the monsters leave (the battle only ends once every
+// enemy-side actor is down).
+void watch_team() {
+    if (!any_live()) return;
+    if (g_cleared_ticks >= 0) {
+        // Recall only once the last action has fully played out: killing an actor while an action that involves it
         // is still running leaves the battle waiting forever (measured: battle_mode 8 soft-lock).
-        // Growth messages first: the battle ends once the monster leaves, and the rest of the queue would be lost.
-        if (++g_puppet.cleared_ticks < RECALL_DELAY_TICKS || text::battle_messages_pending()) return;
-        tlog("SENDOUT recall: %s leaves the battle", g_puppet.name);
-        ff7::cloud_manip_target() = 0;
-        a->status = (a->status & ~ff7::ST_MANIPULATE) | ff7::ST_DEATH;
-        a->current_hp = 0;
-        g_puppet.live = false;
+        // Growth messages first: the battle ends once the monsters leave, and the rest of the queue would be lost.
+        if (++g_cleared_ticks < RECALL_DELAY_TICKS || text::battle_messages_pending()) return;
+        for (Fighter& f : g_team) {
+            if (!f.live) continue;
+            ff7::ActorVars* a = ff7::actor(f.actor);
+            tlog("SENDOUT recall: %s leaves the battle", f.name);
+            ff7::manip_link(f.slot) = 0;
+            a->status = (a->status & ~ff7::ST_MANIPULATE) | ff7::ST_DEATH;
+            a->current_hp = 0;
+            f.live = false;
+            f.done = true;
+        }
         return;
     }
     if (first_living_wild() >= 0) return;
-    g_puppet.cleared_ticks = 0;
+    g_cleared_ticks = 0;
     uint32_t xp = 0;
     for (int i = 4; i <= 9; i++)
         if (is_wild_enemy(i)) xp += ff7::actor(i)->exp_value;
-    api.set_vitals(g_puppet.uid, uint16_t(a->current_hp), a->current_mp);
+    for (const Fighter& f : g_team)
+        if (f.live) api.set_vitals(f.uid, uint16_t(ff7::actor(f.actor)->current_hp), ff7::actor(f.actor)->current_mp);
     // Names before the XP: an evolution renames the monster.
     PartyNames names;
     for (int i = 0; i < 6 && i < api.party_len(); i++) {
@@ -399,25 +457,21 @@ void puppet_watch() {
     TrGrowth grown[6] = {};
     int n = api.award_xp(xp, grown, 6);
     if (n > 6) n = 6;  // the core reports how many grew; only 6 records fit
-    tlog("SENDOUT wild side cleared: %s returns with HP %d/%d; party XP +%u", g_puppet.name, a->current_hp, a->max_hp, xp);
+    tlog("SENDOUT wild side cleared; party XP +%u", xp);
     for (int i = 0; i < n; i++) {
         tlog("  GROWTH uid %u +%u level(s)%s, learned %u move(s)", grown[i].uid, grown[i].levels_gained,
              grown[i].evolved ? ", EVOLVED" : "", grown[i].learned_count);
-        // The monster that fought gets the full story; the bench only announces evolutions (levels show in the roster).
+        // The monsters that fought get the full story; the bench only announces evolutions (levels show in the roster).
         TrMonsterView after;
         if (!find_party_uid(grown[i].uid, &after)) continue;
+        bool fought = false;
+        for (const Fighter& f : g_team) fought |= f.live && f.uid == grown[i].uid;
         char msg[64];
-        if (grown[i].uid != g_puppet.uid) {
-            if (grown[i].evolved) {
-                fit_message(msg, "%s evolved into %s!", "%s became %s!", before_name(names, grown[i].uid), after.name);
-                text::show_battle_message(msg);
-            }
-            continue;
-        }
         if (grown[i].evolved) {
-            fit_message(msg, "%s evolved into %s!", "%s became %s!", g_puppet.name, after.name);
+            fit_message(msg, "%s evolved into %s!", "%s became %s!", before_name(names, grown[i].uid), after.name);
             text::show_battle_message(msg);
         }
+        if (!fought) continue;
         sprintf_s(msg, "%s reached Lv %u!", after.name, after.level);
         text::show_battle_message(msg);
         const int learned = grown[i].learned_count < 3 ? grown[i].learned_count : 3;
@@ -436,7 +490,6 @@ void puppet_watch() {
         }
     }
     if (api.save_slot(TR_AUTOSAVE) < 0) core_error("tr_save_slot(autosave)");
-    // Recall follows after RECALL_DELAY_TICKS (above): the battle only ends when every enemy-side actor is down.
 }
 
 // ---- battle events ---------------------------------------------------------------------------------------
@@ -528,7 +581,7 @@ float status_bonus(uint32_t status) {
 
 void try_capture(int target) {
     g_capture_message[0] = 0;
-    if (g_puppet.live && target == g_puppet.actor) {
+    if (fighter_of_actor(target)) {
         tlog("CAPTURE skipped: actor[%d] is our own monster", target);
         strcpy_s(g_capture_message, "That's your monster!");
         return;
@@ -579,51 +632,52 @@ void __cdecl before_dispatch() {
     const uint8_t cmd = ff7::issued_command();
     tlog("ACTION party slot %u (char %u) command=%u action=%u target_type=%u target_index=%u", slot, chr, cmd,
          ff7::issued_action(), ff7::issued_target_type(), ff7::issued_target_index());
-    if (chr == 0 && g_puppet.live) {
-        g_cloud_action_pending = true;
-        g_held_link = ff7::cloud_manip_target();
-    }
     // Cloud's Steal is the trainer's Catch; the roll waits until the action runs (before_add_text).
     if (core_ready && chr == 0 && cmd == ff7::CMD_STEAL) {
         g_catch.target = ff7::issued_target_index();
         g_catch.armed = true;
     }
-    // Cloud commanding his monster: its moves default to "the other side" from the monster's point of view, which is
-    // our party, and an all-target move (target type 6) takes in every enemy-type actor - the monster itself
+    // A stand-in commanding its monster: its moves default to "the other side" from the monster's point of view,
+    // which is our party, and an all-target move (target type 6) takes in every enemy-type actor - the monsters
     // included, which soft-locked the battle. Every monster move becomes a single hit on a living wild enemy
     // (type 0 + actor index; measured: index 0 = Cloud, 4..9 = enemy actors).
-    if (chr == 0 && cmd == ff7::CMD_ENEMY_ATTACK && g_puppet.live) {
-        if (test_sweep) {
-            while (g_puppet.sweep_used < 3 && g_puppet.moves[g_puppet.sweep_used] == 0xFFFF) g_puppet.sweep_used++;
+    Fighter* f = cmd == ff7::CMD_ENEMY_ATTACK ? fighter_of_move(ff7::issued_action()) : nullptr;
+    if (f) {
+        if (test_sweep && f == &g_team[0]) {
+            while (f->sweep_used < 3 && f->moves[f->sweep_used] == 0xFFFF) f->sweep_used++;
             // Another turn after the last forced move = it played out. The wild side drops to 1 HP, so this turn's
             // hit wins the battle; if the move deals no damage, the turn after downs them before its action runs
             // (downing an actor mid-action is what soft-locks). That action then has no wild target and lands on
             // Cloud, who gets the HP to take it.
-            if (g_puppet.sweep_used >= 3 && g_puppet.sweep_finish < 2) {
-                const bool down = ++g_puppet.sweep_finish == 2;
+            if (f->sweep_used >= 3 && f->sweep_finish < 2) {
+                const bool down = ++f->sweep_finish == 2;
                 for (int i = 4; i <= 9; i++)
                     if (is_wild_enemy(i) && ff7::actor(i)->current_hp > 0) {
                         ff7::actor(i)->current_hp = down ? 0 : 1;
                         if (down) ff7::actor(i)->status |= ff7::ST_DEATH;
                     }
                 if (down) ff7::actor(0)->current_hp = ff7::actor(0)->max_hp = 9999;
-                tlog("SWEEP %s: every move played out; the wild side %s", g_puppet.name, down ? "falls" : "drops to 1 HP");
+                tlog("SWEEP %s: every move played out; the wild side %s", f->name, down ? "falls" : "drops to 1 HP");
             }
             // The issued action of an enemy attack is its slot in the scene's attack table, not the attack id.
-            if (g_puppet.sweep_used < 3) {
-                const uint16_t mv = g_puppet.moves[g_puppet.sweep_used++];
+            if (f->sweep_used < 3) {
+                const uint16_t mv = f->moves[f->sweep_used++];
                 for (int j = 0; j < ff7::SCENE_ATTACK_SLOTS; j++)
                     if (ff7::scene_attack_ids()[j] == mv) ff7::issued_action() = uint16_t(j);
-                tlog("SWEEP %s (species %u) uses move %u (attack slot %u)", g_puppet.name, g_puppet.species, mv,
+                tlog("SWEEP %s (species %u) uses move %u (attack slot %u)", f->name, f->species, mv,
                      ff7::issued_action());
             }
         }
         const uint8_t type = ff7::issued_target_type(), idx = ff7::issued_target_index();
         const bool ok = type == 0 && is_wild_enemy(idx) && ff7::actor(idx)->current_hp > 0 &&
                         !(ff7::actor(idx)->status & ff7::ST_DEATH);
-        const int wild = ok ? idx : first_living_wild();
+        int wild = ok ? idx : first_living_wild();
+        // Wild side already cleared (the monsters are about to leave): aim at a fallen enemy so the move fizzles
+        // instead of landing on Cloud.
+        for (int i = 4; i <= 9 && wild < 0; i++)
+            if (is_wild_enemy(i)) wild = i;
         if (!ok && wild >= 0) {
-            tlog("SENDOUT retarget: %s's attack slot %u (target type %u index %u) -> single wild actor[%d]", g_puppet.name,
+            tlog("SENDOUT retarget: %s's attack slot %u (target type %u index %u) -> single wild actor[%d]", f->name,
                  ff7::issued_action(), type, idx, wild);
             ff7::issued_target_type() = 0;
             ff7::issued_target_index() = uint8_t(wild);
@@ -763,16 +817,20 @@ void install_late_hooks() {
     patch::hook_call_after_args(ff7::CALL_LOAD_SAVE, 0, after_load_save, "load-save");
 }
 
-// ---- companions: in the story, never in battle --------------------------------------------------------------
-// Barret, Tifa & co stay in the savemap party (field scripts check it), but are taken out right before battle init
-// builds the battle party (game thread), and put back when the game returns to the field or world map.
-uint8_t g_stashed[2] = {0xFF, 0xFF};
+// ---- the battle party: Cloud and his monsters ------------------------------------------------------------------
+// Barret, Tifa & co stay in the savemap party (field scripts check it). Right before battle init builds the battle
+// party (game thread), slots 1 and 2 become the monsters' stand-ins (Barret's and Tifa's records, dressed as the
+// monsters); the field party and every record we touched go back when the game returns to the field or world map.
+// After a battle the game also writes the battle slots' stats into the pre-battle party's records, so those are
+// saved and put back too: companions come back exactly as they left.
+uint8_t g_stashed[2] = {0xFF, 0xFF};  // the field party's slots 1 and 2
 volatile bool g_stash_active = false;
-// Their character records as they left: after the battle the game writes its own copy of the pre-battle party back
-// and copies the battle slots' stats into those characters' records - the empty slots, i.e. 0 HP / 0 MP (KO).
-// They never fought, so their records go back exactly as they were.
-uint8_t g_stashed_rec[2][0x84] = {};
-int g_stashed_idx[2] = {-1, -1};
+struct SavedRecord {
+    int idx = -1;
+    uint8_t bytes[0x84] = {};
+};
+SavedRecord g_saved[4];
+int g_saved_n = 0;
 
 int char_record_index(uint8_t id) {
     for (int i = 0; i < 9; i++)
@@ -780,53 +838,118 @@ int char_record_index(uint8_t id) {
     return id < 9 ? id : -1;
 }
 
-void stash_companions() {
+void save_record(uint8_t id) {
+    const int idx = char_record_index(id);
+    if (idx < 0) return;
+    for (int k = 0; k < g_saved_n; k++)
+        if (g_saved[k].idx == idx) return;
+    if (g_saved_n >= 4) return;
+    g_saved[g_saved_n].idx = idx;
+    memcpy(g_saved[g_saved_n].bytes, ff7::savemap_char(idx), 0x84);
+    g_saved_n++;
+}
+
+// Savemap character record (0x84 bytes): +0x01 level, +0x06 dexterity, +0x0E/0F limit level/bar, +0x10 name (FF7
+// text, 12 bytes), +0x1E accessory, +0x1F status, +0x2C HP, +0x2E base HP, +0x30 MP, +0x32 base MP, +0x38 max HP,
+// +0x3A max MP, +0x40 materia (16 x u32, ~0 = empty).
+void dress_standin(uint8_t* rec, const TrMonsterView& v) {
+    uint8_t* name = rec + 0x10;
+    memset(name, 0xFF, 12);
+    for (int i = 0; i < 11 && v.name[i]; i++) {
+        const unsigned char c = static_cast<unsigned char>(v.name[i]);
+        name[i] = (c >= 0x20 && c < 0x7F) ? uint8_t(c - 0x20) : 0;
+    }
+    rec[0x01] = v.level;
+    rec[0x06] = v.stats[4];
+    rec[0x0E] = 1;
+    rec[0x0F] = 0;
+    rec[0x1E] = 0xFF;  // no accessory (no auto-statuses)
+    rec[0x1F] = 0;
+    auto u16 = [rec](int off) -> uint16_t& { return *reinterpret_cast<uint16_t*>(rec + off); };
+    u16(0x2C) = v.hp;
+    u16(0x2E) = v.hp_max;
+    u16(0x30) = v.mp;
+    u16(0x32) = v.mp_max;
+    u16(0x38) = v.hp_max;
+    u16(0x3A) = v.mp_max;
+    memset(rec + 0x40, 0xFF, 16 * 4);  // no materia: no Cover, Counter or command it could use on its own
+}
+
+void prepare_battle_party() {
     uint8_t* pm = ff7::party_members();
-    if (g_stash_active || pm[0] != 0) return;  // only when Cloud leads; otherwise the story party fights
-    g_stashed[0] = pm[1];
-    g_stashed[1] = pm[2];
-    if (pm[1] == 0xFF && pm[2] == 0xFF) return;
-    for (int k = 0; k < 2; k++) {
-        g_stashed_idx[k] = g_stashed[k] == 0xFF ? -1 : char_record_index(g_stashed[k]);
-        if (g_stashed_idx[k] >= 0) memcpy(g_stashed_rec[k], ff7::savemap_char(g_stashed_idx[k]), 0x84);
+    for (Fighter& f : g_team) f = Fighter{};
+    if (pm[0] != 0 || test_keep_companions || !core_ready) return;  // only when Cloud leads; else the story party fights
+    if (!g_stash_active) {
+        g_stashed[0] = pm[1];
+        g_stashed[1] = pm[2];
+        g_saved_n = 0;
+        for (int k = 0; k < 2; k++)
+            if (pm[1 + k] != 0xFF) save_record(pm[1 + k]);
+        g_stash_active = true;
     }
     pm[1] = pm[2] = 0xFF;
-    g_stash_active = true;
-    tlog("PARTY companions %u,%u stay out of this battle", g_stashed[0], g_stashed[1]);
+    int32_t act[2] = {-1, -1};
+    api.active(act);
+    char who[96] = "";
+    for (int k = 0; k < TEAM; k++) {
+        TrMonsterView v;
+        if (act[k] < 0 || api.party_get(uint32_t(act[k]), &v) < 0) continue;
+        const uint8_t id = STANDIN_CHAR[k];
+        save_record(id);
+        const int idx = char_record_index(id);
+        if (idx < 0) continue;
+        dress_standin(ff7::savemap_char(idx), v);
+        pm[1 + k] = id;
+        Fighter& f = g_team[k];
+        f.standin = true;
+        f.slot = 1 + k;
+        f.uid = v.uid;
+        f.species = v.species;
+        strncpy_s(f.name, v.name, _TRUNCATE);
+        strcat_s(who, k ? ", " : "");
+        strcat_s(who, v.name);
+    }
+    tlog("PARTY battle party: Cloud%s%s (field party slots %u,%u stay out)", who[0] ? " + " : " alone", who, g_stashed[0],
+         g_stashed[1]);
 }
 
 void restore_companions() {
     if (!g_stash_active) return;
     g_stash_active = false;
     uint8_t* pm = ff7::party_members();
-    for (int k = 0; k < 2; k++) {
-        if (g_stashed_idx[k] < 0) continue;
-        uint8_t* rec = ff7::savemap_char(g_stashed_idx[k]);
-        const uint16_t hp = *reinterpret_cast<uint16_t*>(rec + 0x2C), was = *reinterpret_cast<uint16_t*>(g_stashed_rec[k] + 0x2C);
-        memcpy(rec, g_stashed_rec[k], 0x84);
-        tlog("PARTY companion %u record restored (HP %u after the battle -> %u)", g_stashed[k], hp, was);
-        g_stashed_idx[k] = -1;
+    const uint8_t after[3] = {pm[0], pm[1], pm[2]};
+    for (int k = 0; k < g_saved_n; k++) {
+        uint8_t* rec = ff7::savemap_char(g_saved[k].idx);
+        const uint16_t hp = *reinterpret_cast<uint16_t*>(rec + 0x2C), was = *reinterpret_cast<uint16_t*>(g_saved[k].bytes + 0x2C);
+        memcpy(rec, g_saved[k].bytes, 0x84);
+        tlog("PARTY record %d restored (HP %u after the battle -> %u)", g_saved[k].idx, hp, was);
     }
-    // The game itself may already have put the pre-battle party back. Any other party = a script changed it: it wins.
-    const bool ours = pm[0] == 0 && pm[1] == 0xFF && pm[2] == 0xFF;
-    const bool games = pm[0] == 0 && pm[1] == g_stashed[0] && pm[2] == g_stashed[1];
-    if (!ours && !games) {
-        tlog("PARTY party changed during the battle (%u,%u,%u); companions not restored", pm[0], pm[1], pm[2]);
+    g_saved_n = 0;
+    // The game itself puts the pre-battle party (Cloud + stand-ins) back. Any other party = a script changed it: it wins.
+    bool ours = after[0] == 0;
+    for (int k = 0; k < 2; k++) ours &= after[1 + k] == 0xFF || after[1 + k] == STANDIN_CHAR[k];
+    if (!ours) {
+        tlog("PARTY party changed during the battle (%u,%u,%u); field party not restored", after[0], after[1], after[2]);
         return;
     }
     pm[1] = g_stashed[0];
     pm[2] = g_stashed[1];
-    tlog("PARTY companions %u,%u back in the field party", pm[1], pm[2]);
+    tlog("PARTY field party back: %u,%u", pm[1], pm[2]);
 }
 
 void forget_companion_stash(const char* why) {
     if (!g_stash_active) return;
     g_stash_active = false;
-    g_stashed_idx[0] = g_stashed_idx[1] = -1;
+    g_saved_n = 0;
     tlog("PARTY stash dropped (%s): it belonged to a game that is gone", why);
 }
 
-void __cdecl before_battle_party_build() { stash_companions(); }
+void __cdecl before_battle_party_build() {
+    static DWORD last = 0;
+    // Called once per party slot within one battle init: prepare on the first of them only.
+    if (GetTickCount() - last > 2000) prepare_battle_party();
+    last = GetTickCount();
+}
 
 // Field mode: give Cloud the Catch materia once per game (flag saved with the roster).
 bool has_steal_materia_anywhere() {
@@ -924,24 +1047,15 @@ void install_restore_hooks() {
 // FALLEN_GRACE_MS after the monster faints: if its death was never processed (HP poked or drained to 0 outside an
 // action, or the action that would have run it was dropped), mark it fallen as the recall does, or the battle keeps
 // it as a living target and never ends (D13). If Cloud's command to it was dropped with it, restart his TIME bar (D12).
-void settle_fallen_monster() {
-    if (g_fallen_actor < 0) return;
-    if (g_orphaned && ff7::cloud_atb() != 0xFFFF) {
-        tlog("SENDOUT Cloud's turn came back by itself (ATB %04X)", ff7::cloud_atb());
-        g_orphaned = false;
-    }
-    if (GetTickCount() - g_fallen_at < FALLEN_GRACE_MS) return;
-    ff7::ActorVars* a = ff7::actor(g_fallen_actor);
+void settle_fallen(Fighter& f) {
+    if (!f.fallen || GetTickCount() - f.fallen_at < FALLEN_GRACE_MS) return;
+    f.fallen = false;
+    if (f.actor < 4) return;
+    ff7::ActorVars* a = ff7::actor(f.actor);
     if (a->current_hp <= 0 && !(a->status & ff7::ST_DEATH)) {
         a->status = (a->status & ~ff7::ST_MANIPULATE) | ff7::ST_DEATH;
-        tlog("SENDOUT actor[%d]'s death was not processed: marked fallen (status %08X)", g_fallen_actor, a->status);
+        tlog("SENDOUT actor[%d]'s death was not processed: marked fallen (status %08X)", f.actor, a->status);
     }
-    if (g_orphaned) {
-        ff7::cloud_atb() = 0;
-        tlog("SENDOUT the fainted monster's action was dropped: Cloud's TIME bar restarts");
-        g_orphaned = false;
-    }
-    g_fallen_actor = -1;
 }
 
 void __cdecl battle_tick(uint32_t) {
@@ -950,26 +1064,30 @@ void __cdecl battle_tick(uint32_t) {
     if (calls <= 3 || calls % 3600 == 0)
         tlog("TICK #%u battle_mode=%u mode=%u", calls, *reinterpret_cast<volatile uint32_t*>(0x9AAD64), ff7::mode());
     if (!core_ready || ff7::mode() != ff7::BATTLE) return;
-    if (g_battle_start_message[0]) {
-        text::show_battle_message(g_battle_start_message);
-        g_battle_start_message[0] = 0;
-    }
+    for (char* m : g_battle_start_message)
+        if (m[0]) {
+            text::show_battle_message(m);
+            m[0] = 0;
+        }
     apply_pending_capture();
-    apply_send_out();
-    face_like_cloud();
+    ff7::manip_link(0) = 0;  // Cloud always has his own menu (Catch); his monsters are commanded from their own rows
+    for (Fighter& f : g_team) {
+        apply_fighter(f);
+        bench_standin(f);
+        face_like_cloud(f);
+        watch_fighter(f);
+        settle_fallen(f);
+    }
     aim_at_wild_enemies();
-    puppet_watch();
-    settle_fallen_monster();
+    watch_team();
+    hud::set_battle_monster(any_live(), "", 0, 0, 0);  // their rows show them; the HUD only explains an empty team
     text::pump_battle_messages();
 }
 
-void toggle_trainer_turns() {
-    if (ff7::mode() != ff7::BATTLE || !g_puppet.live) return;
-    g_trainer_turns = !g_trainer_turns;
-    tlog("F8 %s", g_trainer_turns ? "trainer turns: Cloud acts himself (Catch, items)" : "monster turns: Cloud commands it");
-}
+// Monsters have their own turns now; Cloud's menu is always his own. F8 is kept as a no-op for old habits.
+void toggle_trainer_turns() {}
 
-bool trainer_turns() { return g_trainer_turns; }
+bool trainer_turns() { return true; }
 
 void install_hooks() {
     int ok = 0, total = 0;
@@ -1053,12 +1171,15 @@ void monitor_loop() {
         if (core_ready && (m == ff7::FIELD || m == ff7::WORLDMAP)) monsters::keep_entry_open();
         if (m != last_mode) {
             tlog("MODE %u (%s) -> %u (%s)", last_mode, ff7::mode_name(last_mode), m, ff7::mode_name(m));
-            if (last_mode == ff7::BATTLE && g_puppet.live) {
-                // Battle ended with the monster still out (escape, scripted end): keep its HP/MP.
-                const ff7::ActorVars* a = ff7::actor(g_puppet.actor);
-                api.set_vitals(g_puppet.uid, uint16_t(a->current_hp > 0 ? a->current_hp : 0), a->current_mp);
-                tlog("SENDOUT battle ended with %s out: HP %d/%d kept", g_puppet.name, a->current_hp, a->max_hp);
-                g_puppet.live = false;
+            if (last_mode == ff7::BATTLE) {
+                // Battle ended with monsters still out (escape, scripted end): keep their HP/MP.
+                for (Fighter& f : g_team) {
+                    if (!f.live) continue;
+                    const ff7::ActorVars* a = ff7::actor(f.actor);
+                    api.set_vitals(f.uid, uint16_t(a->current_hp > 0 ? a->current_hp : 0), a->current_mp);
+                    tlog("SENDOUT battle ended with %s out: HP %d/%d kept", f.name, a->current_hp, a->max_hp);
+                    f.live = false;
+                }
             }
             if (m == ff7::FIELD || m == ff7::WORLDMAP) restore_companions();
             if (m == ff7::GAMEOVER || m == ff7::MAIN_MENU || m == ff7::INTRO) forget_companion_stash(ff7::mode_name(m));

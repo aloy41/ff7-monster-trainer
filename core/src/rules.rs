@@ -5,8 +5,8 @@ use crate::species::Species;
 
 pub const MAX_LEVEL: u8 = 99;
 pub const PARTY_SIZE: usize = 6;
-/// Pokemon-style singles: Cloud commands one monster at a time (FF7's Manipulate link is one caster -> one actor).
-pub const ACTIVE_SLOTS: usize = 1;
+/// Two monsters fight beside Cloud, each in its own party row (a hidden stand-in commands it through its own link).
+pub const ACTIVE_SLOTS: usize = 2;
 /// FF7's Manipulate menu (what Cloud sees when commanding a monster) lists 3 moves.
 pub const EQUIPPED_MOVES: usize = 3;
 /// Boss capture rate once the post-game rematch flag is set (story fights stay uncapturable).

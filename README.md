@@ -2,11 +2,12 @@
 
 A mod for the classic PC FINAL FANTASY VII that turns Cloud into a monster trainer. Every regular enemy can be
 caught, raised, levelled and evolved, then sent into battle, where it fights with its own moves, model and
-animations. Barret, Tifa and the rest stay in the story but step aside in battle.
+animations. Up to two monsters fight beside Cloud as real party members, each with its own HP, MP and TIME bar.
+Barret, Tifa and the rest stay in the story but step aside in battle.
 
-> **Status: work in progress.** Catching, sending out, EXP and levels, learned moves, evolution, saves, the
-> Monsters page and the installer all work. Being reworked right now: monsters as real party members (their own
-> party row with HP, MP and time bar, up to two fighting beside Cloud).
+> **Status: work in progress.** Catching, two-monster battles with their own party rows, EXP and levels, learned
+> moves, evolution, saves, the Monsters page and the installer all work. Next: a third monster stepping in when
+> one faints, and wider testing across the whole game.
 
 ## Features
 
@@ -21,8 +22,9 @@ animations. Barret, Tifa and the rest stay in the story but step aside in battle
   its own buttons, so it works on keyboard and controller. It shows each monster's type, weaknesses, HP, MP, EXP,
   stats, moves, next move and evolution. You can reorder the party, trade monsters with the PC box, and choose
   which known moves each monster uses in battle.
-- **Fights beside Cloud:** the monster stands in Cloud's row in every layout (back and pincer attacks too), and its
-  moves aim at the enemies.
+- **Real party members:** the first two conscious monsters take party rows 2 and 3, with their own HP, MP, TIME
+  bar and turns, and stand in the party's spots in every layout (back and pincer attacks too). Cloud keeps his own
+  menu, with Catch, on his turns.
 - **No game files in this repository.** The installer copies your Steam install into a separate folder and reads
   the monster data from it; your Steam install is never modified.
 
@@ -48,8 +50,10 @@ Requirements: FINAL FANTASY VII on Steam (the 2026 release), Windows 10/11, Pyth
 ### How it works
 
 `DINPUT.dll` is a DirectInput proxy that the classic `ff7_en.exe` (1.02) loads at startup. It patches a handful of
-byte-checked call sites in the engine: scene load, battle tick, action dispatch, battle text, the end-of-battle
-menu, and save/load. All game rules (catching, growth, evolution, the roster) live in the Rust core behind a small
+byte-checked call sites in the engine: scene load, battle party build, battle tick, action dispatch, battle text,
+the end-of-battle menu, and save/load. A monster in battle is an enemy-side actor (its own model, moves and
+animation scripts) driven through FF7's Manipulate link. Its party row belongs to a hidden, untargetable stand-in
+whose link points at it, so the stand-in's turns are the monster's turns. All game rules (catching, growth, evolution, the roster) live in the Rust core behind a small
 C ABI. The 64-bit `FFVII.exe` launcher and its DRM are never used or touched.
 
 ### Testing

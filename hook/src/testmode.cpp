@@ -528,6 +528,9 @@ DWORD WINAPI script_thread(void*) {
                 }
             }
             tlog("SNAP %s (4 regions)", a1);
+        } else if (!strcmp(cmd, "companions")) {
+            trainer::test_keep_companions = !strcmp(a1, "on");
+            tlog("TEST companions %s", trainer::test_keep_companions ? "stay in" : "step out");
         } else if (!strcmp(cmd, "layout")) {
             // layout <n> | layout off : force the next battles' layout (2 back attack, 4 pincer, ...)
             trainer::test_layout = !strcmp(a1, "off") ? -1 : int(strtol(a1, nullptr, 0));

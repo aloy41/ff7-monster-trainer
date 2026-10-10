@@ -1,0 +1,31 @@
+log probe_rename
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 93
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 6000
+shot T-start
+write32 DBFE20 0xFF3A3A3A
+wait 1500
+shot N-renamed
+press ok
+wait 2000
+shot N-after
+quit

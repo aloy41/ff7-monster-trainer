@@ -198,7 +198,7 @@ fn active_skips_ko_and_xp_share() {
         r.party.push(Monster::new(i + 1, s, 2, 0));
     }
     r.party[0].hp = 0;
-    assert_eq!(r.active(), [Some(1)], "the first conscious monster leads");
+    assert_eq!(r.active(), [Some(1), Some(2)], "the first two conscious monsters fight");
     r.party.push(Monster::new(9, s, 2, 0));
     let xp = rules::xp_for_level(10);
     r.award_xp(&dex, xp);

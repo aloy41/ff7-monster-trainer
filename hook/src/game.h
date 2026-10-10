@@ -164,6 +164,9 @@ inline int16_t* home_position(int actor) { return reinterpret_cast<int16_t*>(0xB
 // Cloud's battle party record (party slot 0): byte = the enemy actor he is manipulating (0 = none). Found by diffing a
 // real Manipulate; writing it + the target's MANIPULATE status hands that actor's turns to Cloud's menu.
 inline volatile uint8_t& cloud_manip_target() { return *reinterpret_cast<volatile uint8_t*>(0x9A8DBE); }
+// Every actor has its own link byte (0x34-byte records; 0x9A8DBE is actor 0's): party slots 1 and 2 can each command
+// a different enemy actor (measured: slot 1's link -> its turn's menu is that actor's moves).
+inline volatile uint8_t& manip_link(int actor) { return *reinterpret_cast<volatile uint8_t*>(0x9A8DBE + actor * 0x34); }
 
 // Cloud's ATB (u16, 0xFFFF = full; measured by scanning battle memory). It stays full from his command until that
 // action has played out, then restarts from 0.

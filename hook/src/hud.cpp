@@ -21,6 +21,13 @@ struct BattleMon {
 } g_battle;
 
 bool g_roster_open = false;
+
+bool battle_out() {
+    AcquireSRWLockExclusive(&g_lock);
+    const bool out = g_battle.out;
+    ReleaseSRWLockExclusive(&g_lock);
+    return out;
+}
 char g_toast[96] = {};
 DWORD g_toast_until = 0;
 
@@ -149,17 +156,7 @@ int layout(Pen& p, const BattleMon& b, bool toast_on, const char* t) {
     char s[128];
     if (ff7::mode() == ff7::BATTLE) {
         if (b.out) {
-            sprintf_s(s, "%s  Lv %u", b.name, b.level);
-            p.text(10, y, TEXT_FG, s);
-            y += line;
-            sprintf_s(s, "%d/%d", b.hp < 0 ? 0 : b.hp, b.hp_max);
-            const int hpw = text_width(p.dc, s);
-            p.fit(10 + 140 + 10 + hpw);  // bar at least 140 px, then the numbers
-            if (p.draw) bar(p.dc, 10, y + 2, p.W - 32 - hpw, 8, b.hp, b.hp_max);
-            p.text(p.W - 12 - hpw, y - 3, b.hp > 0 ? TEXT_FG : HP_LOW, s);
-            y += line;
-            p.text(10, y, DIM, trainer::trainer_turns() ? "F8: back to the monster" : "F8: Cloud acts (Catch)");
-            y += line;
+            // Monsters are out: their own party rows show them.
         } else {
             // Why nobody is out: no room in this battle, everyone fainted, or no monsters at all.
             int32_t act[2] = {-1, -1};
@@ -315,7 +312,7 @@ DWORD WINAPI hud_thread(void*) {
                              ClientToScreen(g_game, &tl) && ff7::mode() != 0;
         const uint16_t mode = ff7::mode();
         const bool relevant = mode == ff7::BATTLE || mode == ff7::FIELD || mode == ff7::WORLDMAP;
-        if (visible && relevant) {
+        if (visible && relevant && !(mode == ff7::BATTLE && battle_out())) {
             HDC dc = GetDC(g_hud);
             const SIZE sz = paint(dc, true);
             ReleaseDC(g_hud, dc);
