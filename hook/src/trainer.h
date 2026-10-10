@@ -19,5 +19,7 @@ bool trainer_turns();
 // Test mode only (lab/sweep_moves.ps1): each turn the monster uses its next equipped move, and the battle can't end
 // until every one of them has run once, so one battle exercises the monster's whole move list.
 extern volatile bool test_sweep;
+// Test mode only: force the next battles' layout (-1 = as the formation says).
+extern volatile int test_layout;
 
 }  // namespace trainer

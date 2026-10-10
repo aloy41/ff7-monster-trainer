@@ -147,6 +147,19 @@ struct Placement {
 static_assert(sizeof(Placement) == 16, "Placement");
 #pragma pack(pop)
 inline Placement* placement(int k) { return reinterpret_cast<Placement*>(SCENE_PLACEMENT) + k; }
+// Battle layout of the loaded formation (scene setup +0x12): 0 normal, 1 preemptive, 2 back attack, 3 side attack,
+// 4 pincer, 5-7 side variants.
+inline volatile uint8_t& battle_layout() { return *reinterpret_cast<volatile uint8_t*>(SCENE_SETUP + 0x12); }
+
+// Per-actor battle model state [battle_model_state], 0x1AEC each from 0xBE1178: rotation (3 x u16) at +0x15E and
+// position (x, y, z) at +0x166; the "initial" rotation the model returns to at +0x16..+0x1A.
+constexpr uintptr_t MODEL_STATE = 0xBE1178;
+constexpr uintptr_t MODEL_STATE_SIZE = 0x1AEC;
+inline int16_t* model_position(int actor) { return reinterpret_cast<int16_t*>(MODEL_STATE + actor * MODEL_STATE_SIZE + 0x166); }
+inline uint16_t* model_rotation(int actor) { return reinterpret_cast<uint16_t*>(MODEL_STATE + actor * MODEL_STATE_SIZE + 0x15E); }
+inline uint16_t* model_initial_rotation(int actor) { return reinterpret_cast<uint16_t*>(MODEL_STATE + actor * MODEL_STATE_SIZE + 0x16); }
+// Each actor's home spot (x, y, z), where it walks back to after acting: 6 bytes per actor from 0xBFD0A0.
+inline int16_t* home_position(int actor) { return reinterpret_cast<int16_t*>(0xBFD0A0 + actor * 6); }
 
 // Cloud's battle party record (party slot 0): byte = the enemy actor he is manipulating (0 = none). Found by diffing a
 // real Manipulate; writing it + the target's MANIPULATE status hands that actor's turns to Cloud's menu.

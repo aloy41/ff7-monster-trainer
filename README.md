@@ -4,9 +4,9 @@ A mod for the classic PC FINAL FANTASY VII that turns Cloud into a monster train
 caught, raised, levelled and evolved, then sent into battle, where it fights with its own moves, model and
 animations. Barret, Tifa and the rest stay in the story but step aside in battle.
 
-> **Status: work in progress.** Catching, sending out, EXP and levels, learned moves, evolution, saves and the
-> installer all work. Being reworked right now: monsters as real party members (their own party row with HP, MP
-> and time bar, up to two fighting beside Cloud), and a Monsters page in the main menu.
+> **Status: work in progress.** Catching, sending out, EXP and levels, learned moves, evolution, saves, the
+> Monsters page and the installer all work. Being reworked right now: monsters as real party members (their own
+> party row with HP, MP and time bar, up to two fighting beside Cloud).
 
 ## Features
 
@@ -17,6 +17,12 @@ animations. Barret, Tifa and the rest stay in the story but step aside in battle
 - **Growth:** EXP, levels, moves learned by level, and 31 evolution lines (Mono Drive → Scrutin Eye,
   Guard Hound → Blood Taste, ...).
 - **Party of 6** plus a PC box, saved alongside every game save and restored when that save loads.
+- **Monsters page** in the main menu (where PHS was), drawn with the game's own windows and cursor and driven by
+  its own buttons, so it works on keyboard and controller. It shows each monster's type, weaknesses, HP, MP, EXP,
+  stats, moves, next move and evolution. You can reorder the party, trade monsters with the PC box, and choose
+  which known moves each monster uses in battle.
+- **Fights beside Cloud:** the monster stands in Cloud's row in every layout (back and pincer attacks too), and its
+  moves aim at the enemies.
 - **No game files in this repository.** The installer copies your Steam install into a separate folder and reads
   the monster data from it; your Steam install is never modified.
 

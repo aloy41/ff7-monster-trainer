@@ -475,3 +475,140 @@ pub unsafe extern "C" fn tr_species_name(species: u16, buf: *mut u8, len: u32) -
         Ok(n as i32)
     }))
 }
+
+/// One move as the Monsters screen shows it.
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct TrMoveLine {
+    pub id: u16,
+    pub mp: u16,
+    pub power: u8,
+    pub _pad: [u8; 3],
+    /// UTF-8, NUL-terminated.
+    pub name: [u8; 24],
+    /// Elements, e.g. "Fire" or "Bolt/Wind"; empty for none (UTF-8, NUL-terminated).
+    pub element: [u8; 24],
+}
+const _: () = assert!(std::mem::size_of::<TrMoveLine>() == 56);
+
+/// Everything the Monsters screen shows about one party or box monster.
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct TrMonsterDetail {
+    pub view: TrMonsterView,
+    pub xp: u32,
+    /// Total XP at which the next level is reached (0 at the level cap).
+    pub xp_next: u32,
+    pub caught_level: u8,
+    pub next_learn_level: u8,
+    pub evolve_level: u8,
+    pub equipped_count: u8,
+    pub known_count: u8,
+    pub _pad: [u8; 3],
+    pub species_name: [u8; 24],
+    /// "Earth/Water" (UTF-8, NUL-terminated).
+    pub types: [u8; 32],
+    /// "Fire, Ice" (UTF-8, NUL-terminated), empty if none.
+    pub weak: [u8; 48],
+    pub next_learn: [u8; 24],
+    pub evolve_into: [u8; 24],
+    /// Equipped moves first (menu order), then the other known moves.
+    pub moves: [TrMoveLine; 12],
+}
+const _: () = assert!(std::mem::size_of::<TrMonsterDetail>() == 928);
+
+fn put(dst: &mut [u8], s: &str) {
+    let n = s.len().min(dst.len() - 1);
+    dst[..n].copy_from_slice(&s.as_bytes()[..n]);
+    dst[n] = 0;
+}
+
+fn title(s: &str) -> String {
+    let mut c = s.chars();
+    c.next().map(|f| f.to_uppercase().collect::<String>() + c.as_str()).unwrap_or_default()
+}
+
+fn detail(dex: &Dex, m: &Monster) -> TrMonsterDetail {
+    let blank_move = TrMoveLine { id: 0xFFFF, mp: 0, power: 0, _pad: [0; 3], name: [0; 24], element: [0; 24] };
+    let mut d = TrMonsterDetail {
+        view: view(dex, m),
+        xp: m.xp,
+        xp_next: if m.level >= rules::MAX_LEVEL { 0 } else { rules::xp_for_level(m.level + 1) },
+        caught_level: m.caught_level,
+        next_learn_level: 0,
+        evolve_level: 0,
+        equipped_count: 0,
+        known_count: 0,
+        _pad: [0; 3],
+        species_name: [0; 24],
+        types: [0; 32],
+        weak: [0; 48],
+        next_learn: [0; 24],
+        evolve_into: [0; 24],
+        moves: [blank_move; 12],
+    };
+    let Some(s) = dex.get(m.species) else { return d };
+    put(&mut d.species_name, &s.name);
+    put(&mut d.types, &s.types.iter().map(|t| title(t)).collect::<Vec<_>>().join("/"));
+    let weak = s.affinities.get("weak").map(|v| v.iter().map(|e| title(e)).collect::<Vec<_>>().join(", "));
+    put(&mut d.weak, weak.as_deref().unwrap_or(""));
+    let mut order: Vec<u16> = m.equipped.clone();
+    order.extend(m.known.iter().filter(|id| !m.equipped.contains(id)));
+    for (line, id) in d.moves.iter_mut().zip(order.iter()) {
+        let Some(mv) = s.move_by_id(*id).or_else(|| dex.find_move(*id)) else { continue };
+        line.id = *id;
+        line.mp = mv.mp;
+        line.power = mv.power;
+        put(&mut line.name, &mv.name);
+        put(&mut line.element, &mv.elements.iter().map(|e| title(e)).collect::<Vec<_>>().join("/"));
+    }
+    d.equipped_count = m.equipped.len().min(4) as u8;
+    d.known_count = order.len().min(12) as u8;
+    if let Some(l) = s.learnset.iter().filter(|l| l.level > m.level && !m.known.contains(&l.move_id)).min_by_key(|l| l.level) {
+        d.next_learn_level = l.level;
+        put(&mut d.next_learn, s.move_by_id(l.move_id).map(|mv| mv.name.as_str()).unwrap_or("?"));
+    }
+    if let Some(e) = &s.evolves_to {
+        d.evolve_level = e.level;
+        put(&mut d.evolve_into, dex.get(e.species).map(|t| t.name.as_str()).unwrap_or("?"));
+    }
+    d
+}
+
+/// The Monsters screen's view of party (`in_box` 0) or box (`in_box` 1) monster `index`.
+///
+/// # Safety
+/// `out` must point to a writable TrMonsterDetail.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn tr_monster_detail(in_box: u32, index: u32, out: *mut TrMonsterDetail) -> i32 {
+    if out.is_null() {
+        return E_BAD_ARG;
+    }
+    code(with_state(|s| {
+        let list = if in_box != 0 { &s.roster.storage } else { &s.roster.party };
+        let m = list.get(index as usize).ok_or(E_NOT_FOUND)?;
+        unsafe { *out = detail(&s.dex, m) };
+        Ok(0)
+    }))
+}
+
+/// Equip known move `move_id` in battle-menu slot `slot` (0..3) of party/box monster `index`. If it is already
+/// equipped elsewhere the two slots swap; `slot` past the end appends (up to 4).
+#[unsafe(no_mangle)]
+pub extern "C" fn tr_equip_move(in_box: u32, index: u32, slot: u32, move_id: u16) -> i32 {
+    code(with_state(|s| {
+        let list = if in_box != 0 { &mut s.roster.storage } else { &mut s.roster.party };
+        let m = list.get_mut(index as usize).ok_or(E_NOT_FOUND)?;
+        if !m.known.contains(&move_id) || slot >= 4 {
+            return Err(E_BAD_ARG);
+        }
+        let slot = slot as usize;
+        match m.equipped.iter().position(|&id| id == move_id) {
+            Some(cur) if slot < m.equipped.len() => m.equipped.swap(cur, slot),
+            Some(_) => {}
+            None if slot < m.equipped.len() => m.equipped[slot] = move_id,
+            None => m.equipped.push(move_id),
+        }
+        Ok(0)
+    }))
+}

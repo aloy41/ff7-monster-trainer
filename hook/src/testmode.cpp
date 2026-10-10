@@ -528,6 +528,10 @@ DWORD WINAPI script_thread(void*) {
                 }
             }
             tlog("SNAP %s (4 regions)", a1);
+        } else if (!strcmp(cmd, "layout")) {
+            // layout <n> | layout off : force the next battles' layout (2 back attack, 4 pincer, ...)
+            trainer::test_layout = !strcmp(a1, "off") ? -1 : int(strtol(a1, nullptr, 0));
+            tlog("TEST layout %d", trainer::test_layout);
         } else if (!strcmp(cmd, "find")) {
             // find <ascii> -> every committed read/write address holding it (first 64), for reverse engineering
             const size_t flen = strlen(a1);

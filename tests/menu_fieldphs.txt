@@ -1,0 +1,30 @@
+log menu_fieldphs
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 93
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+wait 1000
+fieldop 49 00 08 00
+wait 2500
+shot P-fieldphs
+press cancel
+wait 1500
+press cancel
+wait 1500
+shot Q-after
+quit

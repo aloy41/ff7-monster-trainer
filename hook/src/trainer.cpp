@@ -1,4 +1,5 @@
 ﻿#include "trainer.h"
+#include "monsters.h"
 #include <windows.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -13,6 +14,7 @@ namespace trainer {
 const char* BUILD = "phase3-sendout " __DATE__ " " __TIME__;
 TrApi api = {};
 bool core_ready = false;
+volatile int test_layout = -1;
 volatile bool test_sweep = false;
 
 namespace {
@@ -56,6 +58,7 @@ bool g_cloud_action_pending = false;
 // stays full with no menu for the rest of the battle (D12). Measured: it sometimes recovers on its own (~9 s), often
 // never. settle_fallen_monster restarts his ATB after FALLEN_GRACE_MS.
 bool g_orphaned = false;
+bool g_face_pending = false;  // the monster takes Cloud's facing once his model has one (face_like_cloud)
 int g_fallen_actor = -1;  // the fainted monster, until settle_fallen_monster has checked its death
 DWORD g_fallen_at = 0;
 constexpr DWORD FALLEN_GRACE_MS = 3000;
@@ -134,6 +137,7 @@ void plan_send_out() {
     g_puppet = Puppet{};
     g_trainer_turns = false;
     g_cloud_action_pending = false;
+    g_face_pending = false;
     g_orphaned = false;
     g_fallen_actor = -1;
     g_battle_start_message[0] = 0;
@@ -184,6 +188,52 @@ void plan_send_out() {
         return;
     }
     tlog("SENDOUT no free placement (formation uses all 6)");
+}
+
+// The monster stands with Cloud, whatever the layout: its home spot (where it walks back to after acting) is set
+// beside Cloud's, in his row, and it faces the way he does. The formation placement only got it into
+// the scene; in a back or pincer attack that spot is among the enemies. The engine computes the party's homes
+// (0x42AE73) and the enemies' (0x42B8D2) at battle start; this runs after each, so whichever comes last, it wins.
+void __cdecl after_homes_set(uint32_t) {
+    if (!(g_puppet.planned || g_puppet.live) || g_puppet.actor < 4) return;
+    const int16_t* cloud = ff7::home_position(0);
+    int16_t* home = ff7::home_position(g_puppet.actor);
+    home[0] = int16_t(cloud[0] + (cloud[0] > 0 ? -900 : 900));
+    home[1] = cloud[1];
+    home[2] = cloud[2];  // in his row, like a party member (a step toward the enemies is among them in a back attack)
+    int16_t* pos = ff7::model_position(g_puppet.actor);
+    for (int i = 0; i < 3; i++) pos[i] = home[i];
+    g_face_pending = true;
+    tlog("SENDOUT layout %u: Cloud home (%d, %d, %d) -> %s home (%d, %d, %d)", ff7::battle_layout(), cloud[0], cloud[1],
+         cloud[2], g_puppet.name, home[0], home[1], home[2]);
+}
+
+// Target selection for a monster move starts on Cloud (the menu sees the move from the puppet's seat, where the
+// "other side" is Cloud's). A monster move only ever hits a wild enemy (before_dispatch), so whenever its cursor is on
+// the party side it goes to the first living wild enemy instead. 0xDC3C70 = the command being targeted (0x20 =
+// monster move); the cursor's actor is at 0xDC3C94, mirrored at 0xDC3C9C (measured: writing both moves the hand).
+int first_living_wild();
+
+void aim_at_wild_enemies() {
+    if (!g_puppet.live || g_trainer_turns || ff7::menu_party_slot() != 0) return;
+    if (ff7::issued_command() != ff7::CMD_ENEMY_ATTACK || ff7::issued_target_index() >= 4) return;
+    const int t = first_living_wild();
+    if (t < 0) return;
+    *reinterpret_cast<volatile uint8_t*>(0xDC3C94) = uint8_t(t);
+    *reinterpret_cast<volatile uint8_t*>(0xDC3C9C) = uint8_t(t);
+}
+
+// Battle tick: once Cloud's model has its facing, the monster takes the same one (also as the facing it returns to).
+void face_like_cloud() {
+    if (!g_face_pending || !g_puppet.live) return;
+    const uint16_t* r = ff7::model_initial_rotation(0);
+    if (!r[0] && !r[1] && !r[2] && !ff7::model_rotation(0)[1]) return;  // not set up yet
+    for (int i = 0; i < 3; i++) {
+        ff7::model_rotation(g_puppet.actor)[i] = ff7::model_rotation(0)[i];
+        ff7::model_initial_rotation(g_puppet.actor)[i] = r[i];
+    }
+    g_face_pending = false;
+    tlog("SENDOUT %s faces like Cloud (rot %u)", g_puppet.name, ff7::model_rotation(0)[1]);
 }
 
 // Runs on the monitor thread once the battle's actors exist.
@@ -418,6 +468,10 @@ void __cdecl after_scene_loaded(uint32_t) {
         ff7::EnemyRecord* e = ff7::scene_enemy(i);
         for (int k = 0; k < 4; k++)
             if (e->item_rates[k] & 0x80) e->item_ids[k] = 0xFFFF;
+    }
+    if (test_layout >= 0) {
+        tlog("  TEST layout %u -> %d", ff7::battle_layout(), test_layout);
+        ff7::battle_layout() = uint8_t(test_layout);
     }
     reset_battle_state();
     plan_send_out();
@@ -902,6 +956,8 @@ void __cdecl battle_tick(uint32_t) {
     }
     apply_pending_capture();
     apply_send_out();
+    face_like_cloud();
+    aim_at_wild_enemies();
     puppet_watch();
     settle_fallen_monster();
     text::pump_battle_messages();
@@ -927,8 +983,12 @@ void install_hooks() {
     total++; ok += patch::hook_call_after(ff7::CALL_BATTLE_END_MENU, ff7::FN_BATTLE_END_MENU, after_battle_end_menu, "battle-end-menu");
     total++; ok += patch::hook_call_before_args(ff7::CALL_ADD_TEXT, ff7::FN_ADD_TEXT, before_add_text, "battle-text");
     total++; ok += patch::hook_call_after(ff7::CALL_BATTLE_MENU_UPDATE, ff7::FN_BATTLE_MENU_UPDATE, battle_tick, "battle-tick");
+    total++; ok += patch::hook_call_after(0x42A6C3, 0x42AE73, after_homes_set, "party-homes");
+    total++; ok += patch::hook_call_after(0x429C50, 0x42B8D2, after_homes_set, "enemy-homes A");
+    total++; ok += patch::hook_call_after(0x429F9B, 0x42B8D2, after_homes_set, "enemy-homes B");
     total++; ok += patch::hook_call_before(ff7::CALL_BATTLE_PARTY_BUILD, ff7::FN_BATTLE_PARTY_BUILD, before_battle_party_build, "battle-party-build");
     install_restore_hooks();
+    monsters::install();
     tlog("hooks: %d of %d installed", ok, total);
 }
 
@@ -959,7 +1019,8 @@ void on_engine_ready(const char* game_dir) {
                bind(api.set_legendary_unlocked, "tr_set_legendary_unlocked") &
                bind(api.move_record, "tr_move_record") & bind(api.species_name, "tr_species_name") &
                bind(api.species_record, "tr_species_record") & bind(api.kit_given, "tr_kit_given") &
-               bind(api.mark_kit_given, "tr_mark_kit_given");
+               bind(api.mark_kit_given, "tr_mark_kit_given") & bind(api.monster_detail, "tr_monster_detail") &
+               bind(api.equip_move, "tr_equip_move");
     if (!all) return;
     if (api.version() != TR_VERSION) {
         tlog("core: version %u, hook expects %u", api.version(), TR_VERSION);
@@ -989,6 +1050,7 @@ void monitor_loop() {
     for (;;) {
         Sleep(16);
         uint16_t m = ff7::mode();
+        if (core_ready && (m == ff7::FIELD || m == ff7::WORLDMAP)) monsters::keep_entry_open();
         if (m != last_mode) {
             tlog("MODE %u (%s) -> %u (%s)", last_mode, ff7::mode_name(last_mode), m, ff7::mode_name(m));
             if (last_mode == ff7::BATTLE && g_puppet.live) {

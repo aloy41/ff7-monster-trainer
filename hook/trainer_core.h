@@ -45,11 +45,32 @@ typedef struct TrGrowth {
     uint16_t evolved_into;
     uint16_t learned[3];  // the first 3 of learned_count (which counts every move learned)
 } TrGrowth;
+
+typedef struct TrMoveLine {
+    uint16_t id, mp;
+    uint8_t power, pad[3];
+    char name[24];     // UTF-8
+    char element[24];  // "Fire", "Bolt/Wind", "" = none
+} TrMoveLine;
+
+typedef struct TrMonsterDetail {
+    TrMonsterView view;
+    uint32_t xp, xp_next;  // xp_next: total XP for the next level, 0 at the cap
+    uint8_t caught_level, next_learn_level, evolve_level, equipped_count, known_count, pad[3];
+    char species_name[24];
+    char types[32];   // "Earth/Water"
+    char weak[48];    // "Fire, Ice", "" = none
+    char next_learn[24];
+    char evolve_into[24];
+    TrMoveLine moves[12];  // equipped first (menu order), then the other known moves
+} TrMonsterDetail;
 #pragma pack(pop)
 
 static_assert(sizeof(TrMonsterView) == 88, "TrMonsterView layout drifted from ffi.rs");
 static_assert(sizeof(TrMoveRecord) == 64, "TrMoveRecord layout drifted from ffi.rs");
 static_assert(sizeof(TrGrowth) == 16, "TrGrowth layout drifted from ffi.rs");
+static_assert(sizeof(TrMoveLine) == 56, "TrMoveLine layout drifted from ffi.rs");
+static_assert(sizeof(TrMonsterDetail) == 88 + 8 + 8 + 24 + 32 + 48 + 24 + 24 + 12 * 56, "TrMonsterDetail layout drifted");
 
 // Function table, filled by LoadLibrary/GetProcAddress so trainer_core.dll can be reloaded (Ctrl+T)
 // without restarting the game.
@@ -81,6 +102,8 @@ typedef struct TrApi {
     int32_t (*species_record)(uint16_t species, uint8_t* out184);
     int32_t (*kit_given)(void);
     int32_t (*mark_kit_given)(void);
+    int32_t (*monster_detail)(uint32_t in_box, uint32_t index, TrMonsterDetail* out);
+    int32_t (*equip_move)(uint32_t in_box, uint32_t index, uint32_t slot, uint16_t move_id);
 } TrApi;
 
 #define TR_AUTOSAVE 0xFFFFu  // sidecar key for the between-saves autosave (real keys are file << 4 | slot)
