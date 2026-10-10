@@ -1,0 +1,36 @@
+log probe_rowmax
+waitmode 27 30000
+wait 2000
+press ok
+waitmode 20 30000
+wait 2500
+press up
+wait 500
+press ok
+waitmode 1 30000
+core load 40
+wait 4000
+ffnx skip
+wait 15000
+press ok
+wait 1500
+press ok
+wait 1500
+press ok
+wait 1500
+fieldop 70 00 2C 01
+waitmode 2 15000
+wait 6000
+shot T-start
+write32 9AB378 0
+wait 2500
+shot R-stepin
+dump DBA8E0 0x20
+dump 9A8B80 0x20
+write16 DBA8EA 0x49
+wait 800
+shot R-poked2
+write16 9A8B90 0x49
+wait 800
+shot R-poked3
+quit

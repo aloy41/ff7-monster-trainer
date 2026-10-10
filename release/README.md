@@ -32,8 +32,9 @@ To uninstall, delete the FF7 Monster Trainer folder and the shortcut.
   species' moves as they level and some evolve (Mono Drive becomes Scrutin Eye at Lv 15, Guard Hound becomes Blood
   Taste, and so on).
 - **Healing:** saving the game, or resting at an inn or a bed, heals every monster, fainted ones included.
-- **Fainting:** a monster at 0 HP faints (its row goes down) and the others fight on; the next conscious monsters
-  fight in the next battle.
+- **Fainting:** a monster at 0 HP faints and the others fight on. If the battle has room, your third conscious
+  monster steps into its row ("Go, ...!"); otherwise its row goes down. The next conscious monsters fight in the
+  next battle.
 - **Game Over** only when Cloud and every monster out are down. If Cloud falls, his monsters can still win the
   battle for him.
 - **No room:** a few battles have no space for another monster (all six spots, or all three enemy kinds, are

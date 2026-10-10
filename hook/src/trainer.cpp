@@ -61,12 +61,15 @@ struct Fighter {
     bool spot_known = false;
     bool face_pending = false;
     bool done = false;       // left this battle (fainted, recalled, or couldn't join)
+    bool ready = false;      // the reserve: loaded, hidden, waiting to step in
+    int fallen_actor = -1;   // the actor that fainted (its death is checked FALLEN_GRACE_MS later)
     bool fallen = false;     // fainted: its death gets checked FALLEN_GRACE_MS later (settle_fallen)
     DWORD fallen_at = 0;
     int sweep_used = 0;      // test_sweep: moves forced so far
     int sweep_finish = 0;    // test_sweep: turns since every forced move played out
 };
 Fighter g_team[TEAM];
+Fighter g_reserve;  // the third conscious monster: in the scene out of sight, steps in when one of the two faints
 int g_cleared_ticks = -1;  // battle frames since the wild side was cleared (-1 = not yet)
 char g_battle_start_message[2][64] = {};  // shown on the first battle frame (scene load runs before the battle starts)
 constexpr DWORD FALLEN_GRACE_MS = 3000;
@@ -76,8 +79,11 @@ constexpr int RECALL_DELAY_TICKS = 120;  // ~2 s of battle frames between "wild 
 Fighter* fighter_of_actor(int actor) {
     for (Fighter& f : g_team)
         if ((f.planned || f.live) && f.actor == actor) return &f;
+    if ((g_reserve.planned || g_reserve.ready) && g_reserve.actor == actor) return &g_reserve;
     return nullptr;
 }
+
+void redress_row(int slot, uint32_t uid);  // below
 
 Fighter* fighter_of_slot(int slot) {
     for (Fighter& f : g_team)
@@ -221,6 +227,11 @@ void plan_send_out() {
         if (!find_party_uid(f.uid, &v)) continue;
         plan_fighter(f, v, msg);
     }
+    TrMonsterView r;
+    if (g_reserve.uid && find_party_uid(g_reserve.uid, &r)) {
+        int quiet = 2;  // no "can't join" message for the bench
+        plan_fighter(g_reserve, r, quiet);
+    }
 }
 
 // The engine computes the party's homes (0x42AE73) and the enemies' (0x42B8D2) at battle start; this runs after
@@ -245,6 +256,11 @@ void __cdecl after_homes_set(uint32_t) {
         spos[0] = spos[2] = OUT_OF_SIGHT;
         tlog("SENDOUT layout %u: party slot %d spot (%d, %d, %d) -> %s; stand-in out of sight", ff7::battle_layout(),
              f.slot, f.spot[0], f.spot[1], f.spot[2], f.name);
+    }
+    if ((g_reserve.planned || g_reserve.ready) && g_reserve.actor >= 4) {
+        int16_t* home = ff7::home_position(g_reserve.actor);
+        int16_t* pos = ff7::model_position(g_reserve.actor);
+        home[0] = home[2] = pos[0] = pos[2] = OUT_OF_SIGHT;
     }
 }
 
@@ -276,19 +292,12 @@ void face_like_cloud(Fighter& f) {
     f.face_pending = false;
 }
 
-// Battle tick, once the battle's actors exist: the monster gets its stats, its stand-in the link.
-void apply_fighter(Fighter& f) {
-    if (!f.planned || f.live) return;
-    ff7::ActorVars* a = ff7::actor(f.actor);
-    ff7::ActorVars* s = ff7::actor(f.slot);
-    if (a->max_hp <= 0 || a->formation_id != f.species || s->max_hp <= 0) return;  // not built yet
-    TrMonsterView v;
-    if (!find_party_uid(f.uid, &v)) return;
+void give_stats(ff7::ActorVars* a, const TrMonsterView& v) {
     a->level = v.level;
     a->max_hp = v.hp_max;
-    a->current_hp = v.hp;
+    a->current_hp = v.hp < v.hp_max ? v.hp : v.hp_max;
     a->max_mp = v.mp_max;
-    a->current_mp = v.mp;
+    a->current_mp = v.mp < v.mp_max ? v.mp : v.mp_max;
     a->phys_atk = v.stats[0];
     a->defense = v.stats[1];
     a->mag_atk = v.stats[2];
@@ -298,6 +307,35 @@ void apply_fighter(Fighter& f) {
     a->exp_value = 0;  // no rewards for "defeating" our own monster
     a->gil_value = 0;
     a->ap_value = 0;
+}
+
+// Battle tick, once the battle's actors exist: the reserve waits out of sight, on nobody's side, untargetable.
+void apply_reserve() {
+    Fighter& r = g_reserve;
+    if (!r.planned || r.ready) return;
+    ff7::ActorVars* a = ff7::actor(r.actor);
+    if (a->max_hp <= 0 || a->formation_id != r.species) return;  // not built yet
+    TrMonsterView v;
+    if (!find_party_uid(r.uid, &v)) return;
+    give_stats(a, v);
+    const uint16_t bit = uint16_t(1u << r.actor);
+    ff7::party_actors_mask() &= uint16_t(~bit);
+    ff7::enemy_actors_mask() &= uint16_t(~bit);
+    a->state_flags &= ~TARGETABLE;
+    r.planned = false;
+    r.ready = true;
+    tlog("SENDOUT reserve: %s waits (actor[%d], out of sight)", r.name, r.actor);
+}
+
+// Battle tick, once the battle's actors exist: the monster gets its stats, its stand-in the link.
+void apply_fighter(Fighter& f) {
+    if (!f.planned || f.live) return;
+    ff7::ActorVars* a = ff7::actor(f.actor);
+    ff7::ActorVars* s = ff7::actor(f.slot);
+    if (a->max_hp <= 0 || a->formation_id != f.species || s->max_hp <= 0) return;  // not built yet
+    TrMonsterView v;
+    if (!find_party_uid(f.uid, &v)) return;
+    give_stats(a, v);
     a->status |= ff7::ST_MANIPULATE;
     const uint16_t bit = uint16_t(1u << f.actor);
     ff7::party_actors_mask() |= bit;
@@ -361,21 +399,66 @@ const char* before_name(const PartyNames& p, uint32_t uid) {
     return "?";
 }
 
+// The reserve takes the fallen monster's place: its spot, its party row (renamed), and the stand-in's turns.
+bool step_in(Fighter& f) {
+    Fighter& r = g_reserve;
+    if (!r.ready || g_cleared_ticks >= 0) return false;
+    ff7::ActorVars* a = ff7::actor(r.actor);
+    if (a->current_hp <= 0) return false;
+    f.actor = r.actor;
+    f.uid = r.uid;
+    f.species = r.species;
+    strcpy_s(f.name, r.name);
+    memcpy(f.moves, r.moves, sizeof f.moves);
+    r.ready = false;
+    r.done = true;
+    int16_t* home = ff7::home_position(f.actor);
+    int16_t* pos = ff7::model_position(f.actor);
+    for (int i = 0; i < 3; i++) home[i] = pos[i] = f.spot[i];
+    f.face_pending = true;
+    a->status |= ff7::ST_MANIPULATE;
+    a->state_flags |= TARGETABLE;
+    const uint16_t bit = uint16_t(1u << f.actor);
+    ff7::party_actors_mask() |= bit;
+    ff7::enemy_actors_mask() &= uint16_t(~bit);
+    ff7::manip_link(f.slot) = uint8_t(f.actor);
+    redress_row(f.slot, f.uid);  // name, level, HP and MP: the party row reads its maximums from the record
+    ff7::ActorVars* s = ff7::actor(f.slot);
+    s->status = 0;
+    s->current_hp = a->current_hp;
+    s->max_hp = a->max_hp;
+    s->current_mp = a->current_mp;
+    s->max_mp = a->max_mp;
+    s->level = a->level;
+    s->dexterity = a->dexterity;
+    f.live = true;
+    f.done = false;
+    char go[48];
+    sprintf_s(go, "Go, %s!", f.name);
+    text::show_battle_message(go);
+    tlog("SENDOUT %s steps in: actor[%d] takes party slot %d", f.name, f.actor, f.slot);
+    return true;
+}
+
 void fighter_fainted(Fighter& f) {
     ff7::ActorVars* a = ff7::actor(f.actor);
     ff7::ActorVars* s = ff7::actor(f.slot);
     api.set_vitals(f.uid, 0, a->current_mp);
+    tlog("SENDOUT %s fainted! (actor[%d], party slot %d)", f.name, f.actor, f.slot);
+    char msg[48];
+    sprintf_s(msg, "%s fainted!", f.name);
+    text::show_battle_message(msg);
+    f.fallen = true;
+    f.fallen_actor = f.actor;
+    f.fallen_at = GetTickCount();
+    const uint16_t bit = uint16_t(1u << f.actor);
+    ff7::party_actors_mask() &= uint16_t(~bit);  // the fallen monster is nobody's target any more
+    if (step_in(f)) return;
     ff7::manip_link(f.slot) = 0;
     s->current_hp = 0;
     s->status |= ff7::ST_DEATH;  // its row goes down with it, and its TIME bar stops
     f.live = false;
     f.done = true;
-    f.fallen = true;
-    f.fallen_at = GetTickCount();
-    tlog("SENDOUT %s fainted! (actor[%d], party slot %d)", f.name, f.actor, f.slot);
-    char msg[48];
-    sprintf_s(msg, "%s fainted!", f.name);
-    text::show_battle_message(msg);
 }
 
 // Every battle frame, for each monster that is out.
@@ -391,6 +474,11 @@ void watch_fighter(Fighter& f) {
     s->max_hp = a->max_hp;
     s->current_mp = a->current_mp;
     s->max_mp = a->max_mp;
+    uint16_t* row = ff7::party_row_numbers(f.slot);
+    row[0] = uint16_t(a->current_hp);
+    row[1] = uint16_t(a->max_hp);
+    row[2] = a->current_mp;
+    row[3] = a->max_mp;
     s->state_flags &= ~TARGETABLE;
     // The engine drops the manipulation after the monster's turn once it sits on the party side; keep the link
     // (status, the stand-in's link byte, side masks) asserted for as long as the monster is out.
@@ -436,6 +524,13 @@ void watch_team() {
             a->current_hp = 0;
             f.live = false;
             f.done = true;
+        }
+        if (g_reserve.ready) {  // the battle only ends once every enemy-side actor is down, the bench included
+            ff7::ActorVars* a = ff7::actor(g_reserve.actor);
+            a->status |= ff7::ST_DEATH;
+            a->current_hp = 0;
+            g_reserve.ready = false;
+            g_reserve.done = true;
         }
         return;
     }
@@ -852,11 +947,35 @@ void save_record(uint8_t id) {
 // Savemap character record (0x84 bytes): +0x01 level, +0x06 dexterity, +0x0E/0F limit level/bar, +0x10 name (FF7
 // text, 12 bytes), +0x1E accessory, +0x1F status, +0x2C HP, +0x2E base HP, +0x30 MP, +0x32 base MP, +0x38 max HP,
 // +0x3A max MP, +0x40 materia (16 x u32, ~0 = empty).
+// The party row shows up to 11 characters. A longer name keeps its last word and shortens the ones before it to
+// initials ("Hammer Blaster" -> "H. Blaster"); a single long word is cut.
+void row_name(const char* full, char (&out)[12]) {
+    if (strlen(full) <= 11) {
+        strcpy_s(out, full);
+        return;
+    }
+    const char* last = strrchr(full, ' ');
+    char s[64] = "";
+    if (last) {
+        for (const char* p = full; p < last; p++)
+            if (p == full || p[-1] == ' ') {
+                const char init[3] = {*p, '.', 0};
+                strcat_s(s, init);
+                strcat_s(s, " ");
+            }
+        strcat_s(s, last + 1);
+    }
+    if (!last || strlen(s) > 11) strncpy_s(s, full, 11);
+    strncpy_s(out, s, _TRUNCATE);
+}
+
 void dress_standin(uint8_t* rec, const TrMonsterView& v) {
     uint8_t* name = rec + 0x10;
     memset(name, 0xFF, 12);
-    for (int i = 0; i < 11 && v.name[i]; i++) {
-        const unsigned char c = static_cast<unsigned char>(v.name[i]);
+    char shown[12];
+    row_name(v.name, shown);
+    for (int i = 0; i < 11 && shown[i]; i++) {
+        const unsigned char c = static_cast<unsigned char>(shown[i]);
         name[i] = (c >= 0x20 && c < 0x7F) ? uint8_t(c - 0x20) : 0;
     }
     rec[0x01] = v.level;
@@ -875,9 +994,17 @@ void dress_standin(uint8_t* rec, const TrMonsterView& v) {
     memset(rec + 0x40, 0xFF, 16 * 4);  // no materia: no Cover, Counter or command it could use on its own
 }
 
+void redress_row(int slot, uint32_t uid) {
+    const int idx = char_record_index(STANDIN_CHAR[slot - 1]);
+    TrMonsterView v;
+    if (idx < 0 || !find_party_uid(uid, &v)) return;
+    dress_standin(ff7::savemap_char(idx), v);
+}
+
 void prepare_battle_party() {
     uint8_t* pm = ff7::party_members();
     for (Fighter& f : g_team) f = Fighter{};
+    g_reserve = Fighter{};
     if (pm[0] != 0 || test_keep_companions || !core_ready) return;  // only when Cloud leads; else the story party fights
     if (!g_stash_active) {
         g_stashed[0] = pm[1];
@@ -909,6 +1036,16 @@ void prepare_battle_party() {
         strcat_s(who, k ? ", " : "");
         strcat_s(who, v.name);
     }
+    // The bench: the next conscious monster in party order steps in if one of the two faints.
+    if (g_team[0].standin && g_team[1].standin)
+        for (int i = 0; i < api.party_len() && !g_reserve.uid; i++) {
+            TrMonsterView v;
+            if (api.party_get(uint32_t(i), &v) < 0 || v.ko || i == act[0] || i == act[1]) continue;
+            g_reserve.uid = v.uid;
+            g_reserve.species = v.species;
+            strncpy_s(g_reserve.name, v.name, _TRUNCATE);
+        }
+    if (g_reserve.uid) tlog("PARTY bench: %s", g_reserve.name);
     tlog("PARTY battle party: Cloud%s%s (field party slots %u,%u stay out)", who[0] ? " + " : " alone", who, g_stashed[0],
          g_stashed[1]);
 }
@@ -1050,11 +1187,11 @@ void install_restore_hooks() {
 void settle_fallen(Fighter& f) {
     if (!f.fallen || GetTickCount() - f.fallen_at < FALLEN_GRACE_MS) return;
     f.fallen = false;
-    if (f.actor < 4) return;
-    ff7::ActorVars* a = ff7::actor(f.actor);
+    if (f.fallen_actor < 4) return;
+    ff7::ActorVars* a = ff7::actor(f.fallen_actor);
     if (a->current_hp <= 0 && !(a->status & ff7::ST_DEATH)) {
         a->status = (a->status & ~ff7::ST_MANIPULATE) | ff7::ST_DEATH;
-        tlog("SENDOUT actor[%d]'s death was not processed: marked fallen (status %08X)", f.actor, a->status);
+        tlog("SENDOUT actor[%d]'s death was not processed: marked fallen (status %08X)", f.fallen_actor, a->status);
     }
 }
 
@@ -1071,6 +1208,7 @@ void __cdecl battle_tick(uint32_t) {
         }
     apply_pending_capture();
     ff7::manip_link(0) = 0;  // Cloud always has his own menu (Catch); his monsters are commanded from their own rows
+    apply_reserve();
     for (Fighter& f : g_team) {
         apply_fighter(f);
         bench_standin(f);

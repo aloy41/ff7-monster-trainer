@@ -6,8 +6,8 @@ animations. Up to two monsters fight beside Cloud as real party members, each wi
 Barret, Tifa and the rest stay in the story but step aside in battle.
 
 > **Status: work in progress.** Catching, two-monster battles with their own party rows, EXP and levels, learned
-> moves, evolution, saves, the Monsters page and the installer all work. Next: a third monster stepping in when
-> one faints, and wider testing across the whole game.
+> moves, evolution, saves, the Monsters page and the installer all work. Next: wider testing across the whole
+> game.
 
 ## Features
 
@@ -24,7 +24,9 @@ Barret, Tifa and the rest stay in the story but step aside in battle.
   which known moves each monster uses in battle.
 - **Real party members:** the first two conscious monsters take party rows 2 and 3, with their own HP, MP, TIME
   bar and turns, and stand in the party's spots in every layout (back and pincer attacks too). Cloud keeps his own
-  menu, with Catch, on his turns.
+  menu, with Catch, on his turns. When one of the two faints, the third conscious monster steps into its row if
+  the battle has room for it (FF7 loads at most three kinds of enemy per battle, so it needs to share a kind with
+  one already there).
 - **No game files in this repository.** The installer copies your Steam install into a separate folder and reads
   the monster data from it; your Steam install is never modified.
 

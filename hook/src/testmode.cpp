@@ -535,6 +535,22 @@ DWORD WINAPI script_thread(void*) {
             // layout <n> | layout off : force the next battles' layout (2 back attack, 4 pincer, ...)
             trainer::test_layout = !strcmp(a1, "off") ? -1 : int(strtol(a1, nullptr, 0));
             tlog("TEST layout %d", trainer::test_layout);
+        } else if (!strcmp(cmd, "find16")) {
+            // find16 <hex value> [lo hi] -> addresses of that u16 in the game's own data range (default 0x900000-0xE00000)
+            const uint16_t want = uint16_t(strtoul(a1, nullptr, 16));
+            int hits = 0;
+            for (uintptr_t p = 0x900000; p < 0xE00000 && hits < 48; p += 2) {
+                MEMORY_BASIC_INFORMATION mbi;
+                if ((p & 0xFFF) == 0 && (!VirtualQuery(reinterpret_cast<void*>(p), &mbi, sizeof mbi) || mbi.State != MEM_COMMIT)) {
+                    p += 0xFFE;
+                    continue;
+                }
+                if (*reinterpret_cast<const uint16_t*>(p) == want) {
+                    tlog("FIND16 %04X at %08X", want, unsigned(p));
+                    hits++;
+                }
+            }
+            tlog("FIND16 %04X: %d hit(s)", want, hits);
         } else if (!strcmp(cmd, "find")) {
             // find <ascii> -> every committed read/write address holding it (first 64), for reverse engineering
             const size_t flen = strlen(a1);

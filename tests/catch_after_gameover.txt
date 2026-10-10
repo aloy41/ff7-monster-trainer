@@ -17,6 +17,9 @@ fieldop 70 00 2C 01
 waitmode 2 15000
 wait 2000
 write32 9AB108 1
+# Game Over needs everyone down: Cloud and his monsters (actors 6, 7 in this battle)
+write32 9AB378 1
+write32 9AB3E0 1
 hud f8
 whilemode 2 120000
 wait 1500

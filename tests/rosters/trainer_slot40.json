@@ -1,0 +1,153 @@
+{
+ "version": 1,
+ "slot": 40,
+ "roster": {
+  "next_uid": 60,
+  "party": [
+   {
+    "uid": 50,
+    "species": 53,
+    "nickname": "Hammer Blaster",
+    "level": 12,
+    "xp": 19748,
+    "hp": 400,
+    "mp": 60,
+    "known": [
+     362,
+     363
+    ],
+    "equipped": [
+     362,
+     363
+    ],
+    "caught_level": 12,
+    "caught_scene": 0
+   },
+   {
+    "uid": 1,
+    "species": 93,
+    "nickname": "Scrutin Eye",
+    "level": 15,
+    "xp": 5890,
+    "hp": 484,
+    "mp": 85,
+    "known": [
+     276,
+     27,
+     31,
+     28
+    ],
+    "equipped": [
+     27,
+     31,
+     28
+    ],
+    "caught_level": 14,
+    "caught_scene": 0
+   },
+   {
+    "uid": 3,
+    "species": 16,
+    "nickname": "MP",
+    "level": 3,
+    "xp": 59,
+    "hp": 101,
+    "mp": 16,
+    "known": [
+     272,
+     273
+    ],
+    "equipped": [
+     272,
+     273
+    ],
+    "caught_level": 2,
+    "caught_scene": 0
+   },
+   {
+    "uid": 2,
+    "species": 31,
+    "nickname": "Blood Taste",
+    "level": 8,
+    "xp": 820,
+    "hp": 251,
+    "mp": 34,
+    "known": [
+     274,
+     275,
+     300
+    ],
+    "equipped": [
+     274,
+     275,
+     300
+    ],
+    "caught_level": 7,
+    "caught_scene": 0
+   },
+   {
+    "uid": 4,
+    "species": 19,
+    "nickname": "Grunt",
+    "level": 7,
+    "xp": 556,
+    "hp": 220,
+    "mp": 30,
+    "known": [
+     277,
+     278
+    ],
+    "equipped": [
+     277,
+     278
+    ],
+    "caught_level": 7,
+    "caught_scene": 0
+   },
+   {
+    "uid": 5,
+    "species": 20,
+    "nickname": "1st Ray",
+    "level": 4,
+    "xp": 134,
+    "hp": 130,
+    "mp": 19,
+    "known": [
+     279
+    ],
+    "equipped": [
+     279
+    ],
+    "caught_level": 4,
+    "caught_scene": 0
+   }
+  ],
+  "box": [
+   {
+    "uid": 6,
+    "species": 23,
+    "nickname": "Grashtrike",
+    "level": 8,
+    "xp": 776,
+    "hp": 251,
+    "mp": 34,
+    "known": [
+     289,
+     290
+    ],
+    "equipped": [
+     289,
+     290
+    ],
+    "caught_level": 8,
+    "caught_scene": 0
+   }
+  ],
+  "trainer": {
+   "captures": 7,
+   "battles": 1,
+   "legendary_unlocked": false,
+   "kit_given": true
+  }
+ }
+}
